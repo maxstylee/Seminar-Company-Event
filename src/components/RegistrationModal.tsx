@@ -80,17 +80,17 @@ export function RegistrationModal({ open, onClose }: { open: boolean; onClose: (
         role="dialog"
         aria-modal="true"
         aria-labelledby="reg-title"
-        className="relative outline-none w-full max-w-[743px] rounded-[13px] bg-white px-5 pt-14 pb-8 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)] sm:px-[69px] sm:pt-[78px] sm:pb-[48px]"
+        className="relative outline-none w-full max-w-[640px] rounded-[13px] bg-white px-5 pt-14 pb-7 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45)] sm:px-14 sm:pt-14 sm:pb-9"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label={t.form.close}
-          className="absolute top-[14px] right-[14px] grid size-11 place-items-center rounded-full text-wine-text hover:bg-wine-soft sm:top-[14px] sm:right-[13px]"
+          className="absolute top-3 right-3 grid size-11 place-items-center rounded-full text-wine-text transition-colors hover:bg-wine-soft"
         >
-          <X size={40} strokeWidth={2} />
+          <X size={30} strokeWidth={2} />
         </button>
-        <h2 id="reg-title" className="text-center font-serif text-[32px] leading-[1.1] text-wine-text sm:-mx-6 sm:text-[49px] sm:leading-[60px]">
+        <h2 id="reg-title" className="text-center font-serif text-[30px] leading-[1.15] text-wine-text sm:text-[40px] sm:leading-[48px]">
           {t.form.title}
         </h2>
 
@@ -99,13 +99,13 @@ export function RegistrationModal({ open, onClose }: { open: boolean; onClose: (
             {t.form.sent}
           </p>
         ) : (
-          <form onSubmit={submit} noValidate className="mt-8 flex flex-col sm:mt-[45px]">
-            <div className="flex flex-col gap-[15px]">
+          <form onSubmit={submit} noValidate className="mt-6 flex flex-col sm:mt-7">
+            <div className="flex flex-col gap-3">
               {fields.map(({ key, label, type, auto, Icon }) => (
                 <div key={key}>
                   <label className="relative block">
                     <span className="sr-only">{label}</span>
-                    <Icon size={27} strokeWidth={1.4} className="pointer-events-none absolute top-1/2 left-[28px] -translate-y-1/2 text-[#555]" />
+                    <Icon size={22} strokeWidth={1.5} className="pointer-events-none absolute top-1/2 left-[22px] -translate-y-1/2 text-[#555]" />
                     <input
                       type={type}
                       autoComplete={auto}
@@ -113,7 +113,7 @@ export function RegistrationModal({ open, onClose }: { open: boolean; onClose: (
                       value={values[key]}
                       onChange={set(key)}
                       aria-invalid={!!errors[key]}
-                      className="h-[64px] w-full rounded-[9px] border-[1.5px] border-[#e1e1e1] bg-[#fafafa] pr-4 pl-[88px] text-[19px] text-ink shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none placeholder:text-[#787878] focus:border-wine-text focus:ring-2 focus:ring-wine-text/15 sm:h-[75px] sm:text-[21px] aria-[invalid=true]:border-red-700"
+                      className="h-14 w-full rounded-[9px] border-[1.5px] border-[#e1e1e1] bg-[#fafafa] pr-4 pl-[62px] text-[17px] text-ink shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none placeholder:text-[#787878] focus:border-wine-text focus:ring-2 focus:ring-wine-text/15 sm:h-[58px] sm:text-[18px] aria-[invalid=true]:border-red-700"
                     />
                   </label>
                   {errors[key] && <span className="mt-1 block pl-2 text-sm text-red-700">{errors[key]}</span>}
@@ -123,12 +123,12 @@ export function RegistrationModal({ open, onClose }: { open: boolean; onClose: (
             {failed && <p role="alert" className="mt-4 text-sm text-red-700">Error. Please try again.</p>}
             <button
               type="submit"
-              className="btn relative mt-8 h-[68px] rounded-[9px] bg-[linear-gradient(90deg,#86202b,#6c1520)] font-serif text-[26px] text-white shadow-[0_10px_24px_-14px_rgba(110,18,30,0.8)] sm:mt-[39px] sm:h-[81px] sm:text-[30px]"
+              className="btn relative mt-6 h-[60px] rounded-[9px] bg-[linear-gradient(90deg,#86202b,#6c1520)] font-serif text-[22px] text-white shadow-[0_10px_24px_-14px_rgba(110,18,30,0.8)] sm:mt-6 sm:h-16 sm:text-[24px]"
             >
               {t.register}
-              <ArrowRight size={30} strokeWidth={1.5} className="absolute top-1/2 right-[40px] -translate-y-1/2" />
+              <ArrowRight size={26} strokeWidth={1.5} className="absolute top-1/2 right-8 -translate-y-1/2" />
             </button>
-            <p className="mt-6 text-center text-[17px] text-[#575555] sm:mt-[27px] sm:text-[20px]">{t.form.note}</p>
+            <p className="mt-4 text-center text-[15px] text-[#575555] sm:mt-5 sm:text-[17px]">{t.form.note}</p>
           </form>
         )}
       </div>

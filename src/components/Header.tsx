@@ -1,4 +1,4 @@
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { LANGS } from '../i18n/content'
 import { useLang } from '../i18n/LanguageContext'
@@ -60,6 +60,32 @@ function LangSwitch() {
 export function Header({ onReserve }: { onReserve: () => void }) {
   const { t } = useLang()
   const [open, setOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+
+  // close on outside click, Escape, or when the desktop nav takes over
+  useEffect(() => {
+    if (!open) return
+    const outside = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (!menuRef.current?.contains(target) && !toggleRef.current?.contains(target)) setOpen(false)
+    }
+    const esc = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setOpen(false)
+      toggleRef.current?.focus()
+    }
+    const wide = window.matchMedia('(min-width: 1280px)')
+    const onWide = () => wide.matches && setOpen(false)
+    document.addEventListener('mousedown', outside)
+    document.addEventListener('keydown', esc)
+    wide.addEventListener('change', onWide)
+    return () => {
+      document.removeEventListener('mousedown', outside)
+      document.removeEventListener('keydown', esc)
+      wide.removeEventListener('change', onWide)
+    }
+  }, [open])
 
   const links = [
     ['#benefits', t.nav.about],
@@ -94,41 +120,68 @@ export function Header({ onReserve }: { onReserve: () => void }) {
             {t.register}
           </button>
           <button
+            ref={toggleRef}
             type="button"
-            className="grid size-11 place-items-center rounded-full text-ink xl:hidden"
+            className={`burger grid size-11 place-items-center rounded-full transition-colors duration-200 xl:hidden ${
+              open ? 'bg-wine-soft text-wine' : 'text-ink hover:bg-wine-soft hover:text-wine'
+            }`}
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label="Menu"
+            data-open={open || undefined}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            <span aria-hidden="true" className="burger-lines">
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
         </div>
       </div>
 
-      {open && (
-        <nav id="mobile-menu" className="fixed inset-x-0 top-[73px] bottom-0 overflow-auto bg-white px-4 py-6 lg:top-[89px] xl:hidden" aria-label="Mobile">
-          <ul className="mx-auto flex max-w-3xl flex-col">
-            {links.map(([href, label]) => (
-              <li key={href} className="border-b border-line">
-                <a href={href} onClick={() => setOpen(false)} className="flex min-h-14 items-center font-serif text-2xl">
+      {/* dropdown: only as tall as its content, anchored under the header */}
+      <div
+        ref={menuRef}
+        id="mobile-menu"
+        data-open={open || undefined}
+        inert={!open}
+        className="menu-panel absolute top-full right-3 left-3 z-40 sm:right-6 sm:left-auto sm:w-[340px] xl:hidden"
+      >
+        <nav aria-label="Mobile" className="card-shadow mt-2 overflow-hidden rounded-2xl border border-line bg-white p-2">
+          <ul className="flex flex-col">
+            {links.map(([href, label], i) => (
+              <li key={href} className="menu-item" style={{ '--i': i } as React.CSSProperties}>
+                <a
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  className="group flex min-h-12 items-center justify-between rounded-xl px-4 font-serif text-[18px] text-ink transition-colors duration-200 hover:bg-wine-soft hover:text-wine focus-visible:bg-wine-soft focus-visible:text-wine focus-visible:outline-none"
+                >
                   {label}
+                  <ChevronRight
+                    size={18}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                    className="-translate-x-1 text-wine opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100"
+                  />
                 </a>
               </li>
             ))}
           </ul>
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false)
-              onReserve()
-            }}
-            className="btn mx-auto mt-6 block min-h-12 w-full max-w-3xl rounded-full bg-wine px-6 font-semibold text-white"
-          >
-            {t.register}
-          </button>
+          <div className="menu-item mt-1 border-t border-line px-2 pt-3 pb-1 sm:hidden" style={{ '--i': links.length } as React.CSSProperties}>
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false)
+                onReserve()
+              }}
+              className="btn block min-h-12 w-full rounded-full bg-wine px-6 text-[15px] font-medium text-white shadow-[0_6px_14px_-6px_rgba(138,14,38,0.55)]"
+            >
+              {t.register}
+            </button>
+          </div>
         </nav>
-      )}
+      </div>
     </header>
   )
 }

@@ -60,6 +60,43 @@ body {
 .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
 .btn:active { transform: translateY(1px) scale(0.99); }
 
+/* burger icon: three lines morph into an X */
+.burger-lines { position: relative; display: block; width: 20px; height: 14px; }
+.burger-lines > span {
+  position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.18s ease;
+}
+.burger-lines > span:nth-child(1) { top: 0; }
+.burger-lines > span:nth-child(2) { top: 6px; }
+.burger-lines > span:nth-child(3) { top: 12px; }
+.burger[data-open] .burger-lines > span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger[data-open] .burger-lines > span:nth-child(2) { opacity: 0; transform: scaleX(0.4); }
+.burger[data-open] .burger-lines > span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* mobile dropdown: content-height panel, drops from under the header.
+   Closing is faster than opening so the UI feels responsive. */
+.menu-panel {
+  transform-origin: top right;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
+}
+.menu-panel[data-open] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.24s ease, transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s;
+}
+.menu-item { opacity: 0; transform: translateY(-4px); transition: opacity 0.12s ease, transform 0.12s ease; }
+.menu-panel[data-open] .menu-item {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(0.04s + var(--i, 0) * 0.03s);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
