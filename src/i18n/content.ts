@@ -2,6 +2,8 @@ export type Lang = 'ru' | 'en' | 'ka'
 export const LANGS: Lang[] = ['ru', 'en', 'ka']
 
 export interface Content {
+  /** Browser tab title */
+  pageTitle: string
   nav: { about: string; program: string; speaker: string; audience: string; contacts: string }
   register: string
   reserve: string
@@ -49,6 +51,7 @@ export interface Content {
 
 export const content: Record<Lang, Content> = {
   ru: {
+    pageTitle: 'Фракционная мезотерапия · Professional derma series',
     nav: { about: 'О семинаре', program: 'Программа', speaker: 'Спикер', audience: 'Для кого', contacts: 'Контакты' },
     register: 'Зарегистрироваться',
     reserve: 'Забронировать место',
@@ -124,6 +127,7 @@ export const content: Record<Lang, Content> = {
     },
   },
   en: {
+    pageTitle: 'Fractional mesotherapy · Professional derma series',
     nav: { about: 'About', program: 'Program', speaker: 'Speaker', audience: 'Who it is for', contacts: 'Contacts' },
     register: 'Register',
     reserve: 'Reserve a seat',
@@ -199,6 +203,7 @@ export const content: Record<Lang, Content> = {
     },
   },
   ka: {
+    pageTitle: 'ფრაქციული მეზოთერაპია · Professional derma series',
     nav: { about: 'სემინარის შესახებ', program: 'პროგრამა', speaker: 'სპიკერი', audience: 'ვისთვის', contacts: 'კონტაქტი' },
     register: 'რეგისტრაცია',
     reserve: 'ადგილის დაჯავშნა',
