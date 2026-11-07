@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#8a0e26" />
+    <!-- the design is light-only: stop browser auto-dark / Dark Reader from inverting backgrounds -->
+    <meta name="color-scheme" content="only light" />
+    <meta name="darkreader-lock" />
+    <!-- LCP image: the same srcset/sizes as the hero <img>, so the browser fetches the right file early -->
+    <link
+      rel="preload"
+      as="image"
+      href="/images/hero-speaker.webp"
+      imagesrcset="/images/hero-speaker-480.webp 480w, /images/hero-speaker-680.webp 680w, /images/hero-speaker.webp 846w"
+      imagesizes="(min-width: 1024px) 55vw, min(100vw, 560px)"
+      fetchpriority="high"
+    />
+    <meta name="page-type" content="service" />
+    <meta name="site-kind" content="other" />
+    <meta name="description" content="Научный семинар «Фракционная мезотерапия» с Dr. Ketevan Paksashvili: научные основы и современные комбинированные протоколы. 26 ноября 2026, Тбилиси." />
+    <meta property="og:title" content="Фракционная мезотерапия · научный семинар, Тбилиси" />
+    <meta property="og:description" content="Теория, живая практика и нетворкинг с Dr. Ketevan Paksashvili. 26 ноября 2026." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/hero-speaker.webp" />
+    <title>Фракционная мезотерапия · Professional derma series</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
