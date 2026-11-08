@@ -4,9 +4,11 @@ import { Hero } from './components/Hero'
 import { RegistrationSection } from './components/RegistrationSection'
 import { Audience, Benefits, Brands, Program, Speaker } from './components/Sections'
 import { useLang } from './i18n/LanguageContext'
+import { useScrollReveal } from './useScrollReveal'
 
 export default function App() {
   const { t } = useLang()
+  useScrollReveal()
   return (
     <>
       <a href="#benefits" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2">

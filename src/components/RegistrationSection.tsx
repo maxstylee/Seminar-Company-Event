@@ -163,14 +163,14 @@ export function RegistrationSection() {
       <img src="/images/cta-right.webp" alt="" aria-hidden width={365} height={363} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[363px] w-[365px] xl:block" />
 
       <div className="relative mx-auto max-w-[1080px]">
-        <div className="mx-auto flex max-w-[700px] flex-col items-center text-center">
+        <div data-reveal className="mx-auto flex max-w-[700px] flex-col items-center text-center">
           <h2 id="register-title" className="max-w-[560px] font-display text-[38px] leading-[1.05] text-[#6e0d1d] sm:text-[50px] lg:text-[56px] lg:leading-[58px]">
             {t.cta.title}
           </h2>
           <p className="mt-4 font-display text-[18px] leading-7 text-[#1a191e] lg:mt-[20px] lg:text-[22px]">{t.cta.lead}</p>
         </div>
 
-        <div className="mt-8 rounded-[20px] border border-[#ece6e6] bg-white p-4 shadow-[0_28px_60px_-30px_rgba(70,20,30,0.3),0_2px_6px_rgba(30,20,20,0.04)] sm:p-7 lg:mt-10 lg:p-8">
+        <div data-reveal className="mt-8 rounded-[20px] border border-[#ece6e6] bg-white p-4 shadow-[0_28px_60px_-30px_rgba(70,20,30,0.3),0_2px_6px_rgba(30,20,20,0.04)] sm:p-7 lg:mt-10 lg:p-8">
           <h3 className="text-[20px] leading-tight font-bold text-ink sm:text-[22px]">{f.title}</h3>
           <p className="mt-1.5 text-[14px] leading-[1.45] text-muted">{f.hint}</p>
 
@@ -323,7 +323,7 @@ export function RegistrationSection() {
           )}
         </div>
 
-        <p className="mt-5 flex items-center gap-3 px-1 text-[16px] text-body lg:text-[17px]">
+        <p data-reveal className="mt-5 flex items-center gap-3 px-1 text-[16px] text-body lg:text-[17px]">
           <UsersRound size={24} strokeWidth={1.6} className="shrink-0 text-wine" aria-hidden="true" />
           {t.cta.note}
         </p>

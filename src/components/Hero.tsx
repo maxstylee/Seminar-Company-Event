@@ -10,7 +10,7 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden bg-[linear-gradient(90deg,#fdfdfd_0%,#fafaf9_25%,#f5f4f2_44%,#f2f1ef_100%)]"
     >
-      <div className="relative mx-auto max-w-[1440px] lg:h-[871px]">
+      <div className="relative mx-auto max-w-[1440px] lg:min-h-[871px]">
         <img
           src="/images/hero-speaker.webp"
           srcSet="/images/hero-speaker-480.webp 480w, /images/hero-speaker-680.webp 680w, /images/hero-speaker.webp 846w"
@@ -22,22 +22,23 @@ export function Hero() {
           className="fade-l mx-auto block aspect-[793/871] w-full max-w-[560px] object-cover object-[50%_0%] lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[55.07%] lg:max-w-none lg:[aspect-ratio:auto]"
         />
 
-        <div data-enter className="relative px-5 pt-10 pb-14 sm:px-8 lg:px-0 lg:pt-[78px] lg:pb-0 lg:pl-[61px]">
+        <div data-enter className="relative px-5 pt-10 pb-14 sm:px-8 lg:px-0 lg:pt-[78px] lg:pb-6 lg:pl-[61px]">
           <p className="flex items-center gap-[21px] text-[12px] leading-5 font-medium tracking-[0.34em] text-[#767171] uppercase sm:text-[13px]">
             <span aria-hidden className="h-px w-[56px] bg-[#b9939c]" />
             {t.hero.eyebrow}
           </p>
 
-          <h1 className="mt-4 font-display text-[clamp(34px,11.5vw,44px)] leading-[1.1] font-semibold tracking-[-0.005em] text-ink sm:text-[64px] lg:mt-[23px] lg:text-[clamp(56px,5.97vw,86px)] lg:leading-[93px]">
-            {t.hero.title[0]}
-            <br />
-            <span className="text-[1.1em] text-wine-text">{t.hero.title[1]}</span>
-            <span className="mt-2 block font-sans text-[0.3em] leading-none font-medium tracking-[0.28em] text-[#767171] uppercase lg:mt-1">
+          {/* Each line is its own block (no <br>), with a line-height in em, so the larger wine word gets a line box that
+              holds its descenders instead of spilling into the tag. Spacing below scales with the font size. */}
+          <h1 className="mt-4 font-display text-[clamp(34px,11.5vw,44px)] leading-[1.08] font-semibold tracking-[-0.005em] text-ink sm:text-[64px] lg:mt-[23px] lg:text-[clamp(56px,5.97vw,86px)]">
+            <span className="block">{t.hero.title[0]}</span>
+            <span className="block text-[1.1em] leading-[1.12] text-wine-text">{t.hero.title[1]}</span>
+            <span className="mt-[max(0.9em,14px)] block font-sans text-[0.3em] leading-none font-medium tracking-[0.28em] text-[#767171] uppercase">
               ({t.hero.tag})
             </span>
           </h1>
 
-          <p className="mt-3 max-w-[500px] text-[19px] leading-[1.35] text-body sm:text-[24px] lg:mt-[19px] lg:max-w-[470px] lg:text-[27px] lg:leading-[36px]">
+          <p className="mt-5 max-w-[500px] text-[19px] leading-[1.35] text-body sm:text-[24px] lg:mt-[28px] lg:max-w-[470px] lg:text-[27px] lg:leading-[36px]">
             {t.hero.lead}
           </p>
 
