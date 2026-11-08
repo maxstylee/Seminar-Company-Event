@@ -1,3 +1,4 @@
+import { asset } from '../asset'
 import { ArrowRight, Check, ChevronDown, CircleCheck, LoaderCircle, UsersRound } from 'lucide-react'
 import { useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
 import { CONTACT_EMAIL, FORM_ENDPOINT } from '../config'
@@ -159,8 +160,8 @@ export function RegistrationSection() {
 
   return (
     <section id="register" aria-labelledby="register-title" className="relative overflow-hidden bg-[#fdfdfd] px-4 pt-14 pb-16 sm:px-6 lg:px-8 lg:pt-[40px] lg:pb-[80px]">
-      <img src="/images/cta-left.webp" alt="" aria-hidden width={367} height={363} loading="lazy" className="fade-x-r pointer-events-none absolute top-0 left-0 hidden h-[363px] w-[367px] xl:block" />
-      <img src="/images/cta-right.webp" alt="" aria-hidden width={365} height={363} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[363px] w-[365px] xl:block" />
+      <img src={asset('/images/cta-left.webp')} alt="" aria-hidden width={367} height={363} loading="lazy" className="fade-x-r pointer-events-none absolute top-0 left-0 hidden h-[363px] w-[367px] xl:block" />
+      <img src={asset('/images/cta-right.webp')} alt="" aria-hidden width={365} height={363} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[363px] w-[365px] xl:block" />
 
       <div className="relative mx-auto max-w-[1080px]">
         <div data-reveal className="mx-auto flex max-w-[700px] flex-col items-center text-center">

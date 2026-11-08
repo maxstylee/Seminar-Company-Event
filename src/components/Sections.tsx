@@ -1,3 +1,4 @@
+import { asset, assetSet } from '../asset'
 import {
   ArrowRight,
   Check,
@@ -83,8 +84,8 @@ export function Speaker() {
       <div className="mx-auto grid max-w-[1440px] lg:min-h-[960px] lg:grid-cols-[minmax(0,48%)_minmax(0,1fr)] xl:grid-cols-[minmax(0,50%)_minmax(0,1fr)]">
         <img
           data-reveal
-          src="/images/speaker.webp"
-          srcSet="/images/speaker-480.webp 480w, /images/speaker.webp 815w"
+          src={asset('/images/speaker.webp')}
+          srcSet={assetSet('/images/speaker-480.webp 480w, /images/speaker.webp 815w')}
           sizes="(min-width: 1024px) 50vw, 100vw"
           decoding="async"
           alt={t.hero.speaker}
@@ -143,7 +144,7 @@ export function Speaker() {
 export function Program() {
   const { t } = useLang()
   // same order as the program: theory, break, practice
-  const photos = ['/images/program-theory.webp', '/images/program-break.webp', '/images/program-practice.webp']
+  const photos = ['/images/program-theory.webp', '/images/program-break.webp', '/images/program-practice.webp'].map(asset)
   return (
     <section id="program" className="bg-[#fcfcfc] px-4 py-14 sm:px-6 lg:px-8 lg:pt-[33px] lg:pb-[88px]">
       <div className="mx-auto max-w-[1332px]">
@@ -239,7 +240,7 @@ export function Audience() {
             return (
               <li key={item.title} data-reveal className="lift rounded-[16px] border border-[#ececec] bg-[#fbfbfb] p-[10px] lg:h-[516px]">
                 <img
-                  src={`/images/audience-${i + 1}.webp`}
+                  src={asset(`/images/audience-${i + 1}.webp`)}
                   alt=""
                   width={427}
                   height={270}
@@ -272,8 +273,8 @@ export function Brands() {
       id="brand"
       className="relative overflow-hidden bg-[linear-gradient(180deg,#f5f5f5_0%,#f4f5f7_35%,#f2f3f5_70%,#eff0f2_100%)] px-4 py-14 sm:px-6 lg:h-[964px] lg:px-0 lg:py-0"
     >
-      <img src="/images/brand-left.webp" alt="" aria-hidden width={155} height={960} loading="lazy" className="fade-x-r pointer-events-none absolute top-0 left-0 hidden h-[960px] w-[155px] lg:block" />
-      <img src="/images/brand-right.webp" alt="" aria-hidden width={163} height={960} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[960px] w-[163px] lg:block" />
+      <img src={asset('/images/brand-left.webp')} alt="" aria-hidden width={155} height={960} loading="lazy" className="fade-x-r pointer-events-none absolute top-0 left-0 hidden h-[960px] w-[155px] lg:block" />
+      <img src={asset('/images/brand-right.webp')} alt="" aria-hidden width={163} height={960} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[960px] w-[163px] lg:block" />
 
       <div className="relative mx-auto max-w-[1440px] text-center lg:pt-[56px]">
         <h2 data-reveal className="flex items-center justify-center gap-5 text-[24px] leading-10 font-bold tracking-[0.27em] text-wine-text uppercase sm:gap-[33px] lg:text-[30px]">
@@ -288,8 +289,8 @@ export function Brands() {
         <div className="relative mx-auto mt-12 grid max-w-[1256px] gap-14 md:grid-cols-2 md:gap-0 lg:mt-[83px] lg:h-[458px]">
           <span aria-hidden className="absolute top-0 bottom-0 left-1/2 hidden w-px bg-[#cbcdcc] md:block" />
           {[
-            { label: t.brands.organizer, logo: '/images/logo-professional.webp', w: 513, h: 131, alt: 'Professional derma series', text: t.brands.organizerText, max: 455, logoMt: 67, textMt: 70 },
-            { label: t.brands.partner, logo: '/images/logo-reneo.webp', w: 452, h: 155, alt: 'reNeo Cosmetics', text: t.brands.partnerText, max: 450, logoMt: 56, textMt: 56 },
+            { label: t.brands.organizer, logo: asset('/images/logo-professional.webp'), w: 513, h: 131, alt: 'Professional derma series', text: t.brands.organizerText, max: 455, logoMt: 67, textMt: 70 },
+            { label: t.brands.partner, logo: asset('/images/logo-reneo.webp'), w: 452, h: 155, alt: 'reNeo Cosmetics', text: t.brands.partnerText, max: 450, logoMt: 56, textMt: 56 },
           ].map((b) => (
             <div key={b.alt} data-reveal className="flex flex-col items-center px-4">
               <p className="text-[17px] leading-6 font-bold tracking-[0.2em] text-wine-text uppercase lg:text-[19px]">{b.label}</p>

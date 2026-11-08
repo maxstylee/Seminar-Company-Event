@@ -1,3 +1,4 @@
+import { asset, assetSet } from '../asset'
 import { ArrowRight, CalendarDays, Clock, GraduationCap, MapPin, Shield, UsersRound } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
 
@@ -12,8 +13,8 @@ export function Hero() {
     >
       <div className="relative mx-auto max-w-[1440px] lg:min-h-[871px]">
         <img
-          src="/images/hero-speaker.webp"
-          srcSet="/images/hero-speaker-480.webp 480w, /images/hero-speaker-680.webp 680w, /images/hero-speaker.webp 846w"
+          src={asset('/images/hero-speaker.webp')}
+          srcSet={assetSet('/images/hero-speaker-480.webp 480w, /images/hero-speaker-680.webp 680w, /images/hero-speaker.webp 846w')}
           sizes="(min-width: 1024px) 55vw, min(100vw, 560px)"
           alt={t.hero.speaker}
           width={793}

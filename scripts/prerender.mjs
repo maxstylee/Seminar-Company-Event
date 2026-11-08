@@ -5,6 +5,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const root = path.resolve(import.meta.dirname, '..')
+const base = process.env.BASE_PATH ?? '/'
 const serverDir = path.join(root, 'dist-server')
 const indexPath = path.join(root, 'dist', 'index.html')
 
@@ -17,8 +18,8 @@ if (!template.includes(marker)) throw new Error(`prerender: ${marker} not found 
 let out = template.replace(marker, `<div id="root">${html}</div>`)
 
 // Inline the (small) stylesheet: one less render-blocking request before first paint.
-out = out.replace(/<link rel="stylesheet"[^>]*href="(\/assets\/[^"]+\.css)"[^>]*>/, (tag, href) => {
-  const css = fs.readFileSync(path.join(root, 'dist', href), 'utf8')
+out = out.replace(/<link rel="stylesheet"[^>]*href="(\/[^"]*assets\/[^"]+\.css)"[^>]*>/, (tag, href) => {
+  const css = fs.readFileSync(path.join(root, 'dist', href.slice(base.length)), 'utf8')
   return `<style>${css}</style>`
 })
 

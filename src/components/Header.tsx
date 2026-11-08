@@ -1,3 +1,4 @@
+import { asset } from '../asset'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { content, LANGS, type Content, type Lang } from '../i18n/content'
@@ -145,7 +146,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-[#e6e6e6] bg-white">
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center px-4 sm:px-6 lg:h-[88px] lg:pl-[60px] lg:pr-[48px]">
         <a href="#top" aria-label="Professional derma series" className="shrink-0">
-          <img src="/images/logo-ds.png" alt="Professional derma series" width={184} height={220} className="h-[54px] w-auto lg:h-[68px]" />
+          <img src={asset('/images/logo-ds.png')} alt="Professional derma series" width={184} height={220} className="h-[54px] w-auto lg:h-[68px]" />
         </a>
 
         {/* each link is as wide as its longest translation, so the links keep their positions on a language switch */}
