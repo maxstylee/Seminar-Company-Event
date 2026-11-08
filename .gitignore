@@ -29,7 +29,6 @@ shots
 .taste-skill
 .env
 
-# AI tooling and generated graph (not part of the site)
+# AI tooling (not part of the site)
 .agents
 .claude
-graphify-out

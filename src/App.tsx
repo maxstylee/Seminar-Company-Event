@@ -1,42 +1,29 @@
-import { lazy, Suspense, useCallback, useState } from 'react'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
-import { Audience, Benefits, Brands, CtaBand, Program, Speaker } from './components/Sections'
-
-// The form is not needed for the first paint: load its code on first open.
-const RegistrationModal = lazy(() => import('./components/RegistrationModal').then((m) => ({ default: m.RegistrationModal })))
+import { RegistrationSection } from './components/RegistrationSection'
+import { Audience, Benefits, Brands, Program, Speaker } from './components/Sections'
+import { useLang } from './i18n/LanguageContext'
 
 export default function App() {
-  const [open, setOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const openModal = useCallback(() => {
-    setMounted(true)
-    setOpen(true)
-  }, [])
-  const closeModal = useCallback(() => setOpen(false), [])
-
+  const { t } = useLang()
   return (
     <>
       <a href="#benefits" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2">
-        Skip
+        {t.a11y.skip}
       </a>
-      <Header onReserve={openModal} />
-      <main>
-        <Hero onReserve={openModal} />
+      <Header />
+      <main data-lang-fade>
+        <Hero />
         <Benefits />
         <Speaker />
-        <Program onReserve={openModal} />
+        <Program />
         <Audience />
         <Brands />
-        <CtaBand onReserve={openModal} />
+        {/* always on the page, right above the footer: every register / reserve button scrolls here */}
+        <RegistrationSection />
       </main>
       <Footer />
-      {mounted && (
-        <Suspense fallback={null}>
-          <RegistrationModal open={open} onClose={closeModal} />
-        </Suspense>
-      )}
     </>
   )
 }

@@ -1,17 +1,18 @@
 import {
   ArrowRight,
-  BookOpen,
   Check,
-  Coffee,
+  Clock,
   FileText,
   GraduationCap,
   Hospital,
   Microscope,
   ShieldCheck,
   Syringe,
+  UserRound,
   UsersRound,
 } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
+import { CountUpStats } from './CountUpStats'
 import { CertificateIcon, DoctorIcon, GroupIcon } from './Icons'
 
 /* Every px value below is measured from the 1440px-wide design PDF. */
@@ -63,44 +64,72 @@ export function Benefits() {
   )
 }
 
+/** Bold the leading figure of a bio line ("13+", "500+", "3 000+") so the numbers can be scanned. */
+function withFigure(text: string) {
+  const m = /^(\d[\d\s,.]*\+)(.*)$/s.exec(text)
+  if (!m) return text
+  return (
+    <>
+      <strong className="font-semibold text-wine-text">{m[1]}</strong>
+      {m[2]}
+    </>
+  )
+}
+
 export function Speaker() {
   const { t } = useLang()
   return (
     <section id="speaker" className="bg-white">
-      <div className="mx-auto grid max-w-[1440px] lg:h-[960px] lg:grid-cols-[53.06%_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-[1440px] lg:min-h-[960px] lg:grid-cols-[minmax(0,48%)_minmax(0,1fr)] xl:grid-cols-[minmax(0,50%)_minmax(0,1fr)]">
         <img
           src="/images/speaker.webp"
           srcSet="/images/speaker-480.webp 480w, /images/speaker.webp 815w"
-          sizes="(min-width: 1024px) 53vw, 100vw"
+          sizes="(min-width: 1024px) 50vw, 100vw"
           decoding="async"
           alt={t.hero.speaker}
           width={764}
           height={960}
           loading="lazy"
-          className="block aspect-[764/960] w-full object-cover lg:h-[960px] lg:[aspect-ratio:auto]"
+          className="block aspect-[764/960] w-full object-cover object-top lg:h-full lg:[aspect-ratio:auto]"
         />
-        <div className="min-w-0 px-5 py-12 sm:px-10 lg:px-0 lg:py-0 lg:pt-[96px] lg:pl-[min(68px,4.72vw)]">
-          <p className="grid h-[48px] w-fit place-items-center rounded-full border-[1.5px] border-wine-text px-[30px] text-[17px] font-medium tracking-[0.2em] text-wine-text uppercase lg:text-[19px]">
+        <div className="min-w-0 px-5 py-12 sm:px-10 lg:py-[88px] lg:pr-[min(64px,4.4vw)] lg:pl-[min(68px,4.72vw)]">
+          <p className="grid h-[44px] w-fit place-items-center rounded-full border-[1.5px] border-wine-text px-[26px] text-[15px] font-medium tracking-[0.2em] text-wine-text uppercase lg:text-[17px]">
             {t.speaker.label}
           </p>
-          <h2 className="mt-6 font-display text-[clamp(38px,12.5vw,52px)] leading-[1.05] font-medium tracking-[-0.01em] text-ink sm:text-[72px] lg:mt-[24px] lg:text-[clamp(60px,6.53vw,94px)] lg:leading-none">
+          <h2 className="mt-6 font-display text-[clamp(38px,12vw,52px)] leading-[1.05] font-medium tracking-[-0.01em] text-ink sm:text-[64px] lg:mt-[22px] lg:text-[clamp(52px,5.1vw,74px)] lg:leading-none">
             {t.speaker.name[0]}
             <br />
             {t.speaker.name[1]}
           </h2>
-          <ul className="mt-8 flex flex-col gap-[22px] lg:mt-[54px]">
+          {/* every role carries a divider on its left; the negative margin + overflow clip the divider of the first role on each line */}
+          <div className="mt-5 overflow-hidden lg:mt-6">
+            <ul className="-ml-[13px] flex flex-wrap gap-y-1.5 text-[13px] font-medium tracking-[0.12em] text-wine-text uppercase sm:text-[14px]">
+              {t.speaker.roles.map((r) => (
+                <li
+                  key={r}
+                  className="relative mr-3 pl-[13px] before:absolute before:top-1/2 before:left-0 before:h-3.5 before:w-px before:-translate-y-1/2 before:bg-[#d4aab2]"
+                >
+                  {r}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-8 lg:mt-10">
+            <CountUpStats items={t.speaker.stats} />
+          </div>
+          <ul className="mt-8 flex flex-col gap-4 lg:mt-10">
             {t.speaker.points.map((p) => (
-              <li key={p} className="flex min-h-[50px] items-center gap-6 text-[19px] leading-[1.3] text-[#292929] sm:text-[20px] lg:gap-[34px] lg:text-[clamp(20px,2.01vw,29px)]">
-                <span className="grid size-[44px] shrink-0 place-items-center rounded-full bg-[#8a1820] text-white lg:size-[50px]">
-                  <Check size={26} strokeWidth={3} />
+              <li key={p} className="flex items-start gap-4 text-[16px] leading-[1.6] text-[#292929] sm:text-[17px] xl:text-[18px]">
+                <span className="mt-[2px] grid size-[26px] shrink-0 place-items-center rounded-full bg-[#8a1820] text-white">
+                  <Check size={15} strokeWidth={3} aria-hidden="true" />
                 </span>
-                {p}
+                <span>{withFigure(p)}</span>
               </li>
             ))}
           </ul>
-          <div className="mt-12 flex items-center gap-6 lg:mt-[90px] lg:gap-[min(61px,4.2vw)]">
-            <span aria-hidden className="h-[2px] w-16 shrink-0 bg-[#a3515f] sm:w-24 lg:w-[min(193px,13.4vw)]" />
-            <p className="min-w-0 text-[12px] leading-[25px] tracking-[0.25em] text-[#767676] uppercase sm:text-[13px] sm:tracking-[0.3em] lg:text-[clamp(13px,1.25vw,18px)]">
+          <div className="mt-10 flex items-center gap-6 lg:mt-12 lg:gap-[min(48px,3.4vw)]">
+            <span aria-hidden className="h-[2px] w-16 shrink-0 bg-[#a3515f] sm:w-24 lg:w-[min(160px,11vw)]" />
+            <p className="min-w-0 text-[12px] leading-[25px] tracking-[0.25em] text-[#767676] uppercase sm:text-[13px] sm:tracking-[0.3em] lg:text-[clamp(13px,1.1vw,16px)]">
               {t.speaker.motto[0]}
               <br />
               {t.speaker.motto[1]}
@@ -112,61 +141,83 @@ export function Speaker() {
   )
 }
 
-export function Program({ onReserve }: { onReserve: () => void }) {
+export function Program() {
   const { t } = useLang()
-  const icons = [BookOpen, Syringe, Coffee]
-  const photos = ['/images/program-theory.webp', '/images/program-practice.webp', '/images/program-break.webp']
+  // same order as the program: theory, break, practice
+  const photos = ['/images/program-theory.webp', '/images/program-break.webp', '/images/program-practice.webp']
   return (
-    <section id="program" className="bg-[#fcfcfc] px-4 py-14 sm:px-6 lg:h-[838px] lg:px-0 lg:pt-[33px] lg:pb-0">
-      <div className="mx-auto max-w-[1332px] text-center">
-        <TopRule width={88} />
-        <h2 className="mt-5 font-serif text-[42px] leading-none text-[#342a28] sm:text-[56px] lg:mt-[11px] lg:text-[66px]">
-          {t.program.title}
-        </h2>
-        <p className="mt-4 text-[16px] tracking-[0.12em] text-[#494949] sm:text-[19px] lg:mt-[22px] lg:text-[21px] lg:tracking-[0.18em]">
-          {t.program.lead}
+    <section id="program" className="bg-[#fcfcfc] px-4 py-14 sm:px-6 lg:px-8 lg:pt-[33px] lg:pb-[88px]">
+      <div className="mx-auto max-w-[1332px]">
+        <div className="text-center">
+          <TopRule width={88} />
+          <h2 className="mt-5 font-serif text-[42px] leading-none text-[#342a28] sm:text-[56px] lg:mt-[11px] lg:text-[66px]">{t.program.title}</h2>
+          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-[16px] text-[#494949] sm:text-[18px] lg:mt-[22px] lg:text-[19px]">
+            <li className="flex items-center gap-2.5">
+              <Clock size={22} strokeWidth={1.6} className="shrink-0 text-wine-text" aria-hidden="true" />
+              {t.program.duration}
+            </li>
+            <li className="flex items-center gap-2.5">
+              <UserRound size={22} strokeWidth={1.6} className="shrink-0 text-wine-text" aria-hidden="true" />
+              {t.program.speaker}
+            </li>
+          </ul>
+        </div>
+
+        <ol className="mt-10 flex flex-col gap-5 lg:mt-12 lg:gap-6">
+          {t.program.items.map((item, i) => (
+            <li key={item.title} className="card-shadow overflow-hidden rounded-[14px] border-l-[6px] border-wine-deep bg-white">
+              <div className="flex flex-col gap-5 p-4 sm:flex-row sm:items-center sm:gap-7 sm:p-5 lg:pr-8">
+                <img
+                  src={photos[i]}
+                  alt=""
+                  width={525}
+                  height={236}
+                  loading="lazy"
+                  className="block aspect-[525/236] w-full shrink-0 rounded-[10px] object-cover sm:w-[200px] lg:w-[240px]"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[13px] font-semibold tracking-[0.3em] text-wine">{String(i + 1).padStart(2, '0')}</p>
+                  <h3 className="mt-1 font-serif text-[24px] leading-[1.2] font-bold tracking-[0.01em] text-[#302825] uppercase xl:text-[30px]">{item.title}</h3>
+                  {item.note && <p className="mt-1.5 text-[16px] text-[#6b6b6b] lg:text-[18px]">{item.note}</p>}
+                </div>
+                <span className="flex w-fit shrink-0 items-center gap-2 rounded-full bg-wine-soft px-4 py-2 text-[15px] font-semibold whitespace-nowrap text-wine-text lg:text-[17px]">
+                  <Clock size={18} strokeWidth={2} aria-hidden="true" />
+                  {item.duration}
+                </span>
+              </div>
+
+              {item.groups.length > 0 && (
+                <div className={`grid gap-8 border-t border-[#eeeaea] px-5 pt-6 pb-7 sm:px-7 lg:px-8 lg:pb-8 ${item.groups.length > 1 ? 'lg:grid-cols-3 lg:gap-10' : ''}`}>
+                  {item.groups.map((g) => (
+                    <div key={g.title} className="min-w-0">
+                      <h4 className="font-serif text-[19px] leading-[1.3] font-bold text-[#302825] lg:text-[21px]">{g.title}</h4>
+                      {/* a single group (practice) flows into two columns, read top to bottom so the steps stay in order */}
+                      <ul className={`mt-3.5 ${item.groups.length === 1 ? 'md:columns-2 md:gap-x-10' : ''}`}>
+                        {g.points.map((p) => (
+                          <li key={p} className="flex break-inside-avoid gap-3 pb-2.5 text-[16px] leading-[1.55] text-[#3b3b3a] lg:text-[17px]">
+                            <span aria-hidden className="mt-[0.6em] size-2 shrink-0 rounded-full bg-wine-deep" />
+                            {p}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))}
+        </ol>
+
+        <p className="mx-auto mt-12 max-w-[860px] text-center font-display text-[22px] leading-[1.35] text-wine-text italic sm:text-[26px] lg:mt-14 lg:text-[30px]">
+          {t.program.outro}
         </p>
 
-        <ul className="mt-10 grid gap-[27px] text-left md:grid-cols-2 lg:mt-[27px] lg:grid-cols-3">
-          {t.program.items.map((item, i) => {
-            const Icon = icons[i]
-            return (
-              <li key={item.title} className="card-shadow lift overflow-hidden rounded-[10px] border-t-[10px] border-wine-deep bg-[#fafafa] lg:h-[488px]">
-                <img src={photos[i]} alt="" width={426} height={193} loading="lazy" className="block aspect-[426/193] w-full object-cover" />
-                <div className="px-6 pt-[23px] pb-8 sm:px-8">
-                  <div className="flex items-center gap-5 xl:gap-[34px]">
-                    <span className="grid size-[72px] shrink-0 place-items-center rounded-full bg-[#f6eeee] text-wine-text xl:size-[87px]">
-                      <Icon size={50} strokeWidth={1.3} className="size-[42px] xl:size-[50px]" />
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="font-serif text-[26px] leading-[34px] font-bold tracking-[0.01em] text-[#302825] uppercase xl:text-[32px]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-[4px] text-[19px] leading-7 text-[#6b6b6b] lg:text-[21px]">{item.duration}</p>
-                    </div>
-                  </div>
-                  <hr className="mt-[18px] border-[#eaeaea]" />
-                  <ul className="mt-[21px] flex flex-col gap-[12px]">
-                    {item.points.map((p) => (
-                      <li key={p} className="flex items-center gap-[13px] text-[19px] leading-7 text-[#3b3b3a] lg:text-[21px]">
-                        <span aria-hidden className="ml-[10px] size-2 shrink-0 rounded-full bg-wine-deep" />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-
-        <button
-          type="button"
-          onClick={onReserve}
-          className="btn mt-10 h-[64px] w-full max-w-[425px] rounded-full bg-wine-alt text-[20px] text-white lg:mt-[45px] lg:h-[76px] lg:text-[24px]"
-        >
-          {t.claim}
-        </button>
+        <div className="mt-8 text-center lg:mt-10">
+          <a href="#register" className="btn-3d h-[64px] w-full max-w-[425px] rounded-[14px] text-[20px] lg:h-[72px] lg:text-[22px]">
+            {t.claim}
+            <ArrowRight size={24} strokeWidth={1.8} aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </section>
   )
@@ -277,31 +328,6 @@ export function Brands() {
             )
           })}
         </ul>
-      </div>
-    </section>
-  )
-}
-
-export function CtaBand({ onReserve }: { onReserve: () => void }) {
-  const { t } = useLang()
-  return (
-    <section className="relative overflow-hidden bg-[#fdfdfd] px-4 py-14 sm:px-6 lg:h-[363px] lg:px-0 lg:py-0">
-      <img src="/images/cta-left.webp" alt="" aria-hidden width={367} height={363} loading="lazy" className="fade-x-r pointer-events-none absolute top-0 left-0 hidden h-[363px] w-[367px] lg:block" />
-      <img src="/images/cta-right.webp" alt="" aria-hidden width={365} height={363} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[363px] w-[365px] lg:block" />
-      <div className="relative mx-auto flex max-w-[700px] flex-col items-center text-center lg:pt-[25px]">
-        <h2 className="max-w-[500px] font-display text-[40px] leading-[1.05] text-[#6e0d1d] sm:text-[50px] lg:text-[56px] lg:leading-[58px]">
-          {t.cta.title}
-        </h2>
-        <p className="mt-4 font-display text-[18px] leading-7 text-[#1a191e] lg:mt-[26px] lg:text-[24px]">{t.cta.lead}</p>
-        <button
-          type="button"
-          onClick={onReserve}
-          className="btn mt-6 inline-flex h-[60px] w-full max-w-[418px] items-center justify-center gap-[30px] rounded-[8px] bg-wine-deep font-display text-[22px] text-white shadow-[0_10px_24px_-14px_rgba(110,18,30,0.7)] lg:mt-[30px] lg:h-[66px] lg:text-[24px]"
-        >
-          {t.register}
-          <ArrowRight size={28} strokeWidth={1.4} />
-        </button>
-        <p className="mt-3 font-display text-[15px] text-[#222] lg:mt-[16px] lg:text-[16px]">{t.cta.note}</p>
       </div>
     </section>
   )

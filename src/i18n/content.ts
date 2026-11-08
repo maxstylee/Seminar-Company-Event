@@ -1,28 +1,49 @@
 export type Lang = 'ru' | 'en' | 'ka'
-export const LANGS: Lang[] = ['ru', 'en', 'ka']
+/** Order of the header language switch (RU · KA · EN). */
+export const LANGS: Lang[] = ['ru', 'ka', 'en']
+
+/** One timed block of the seminar program. A block with no groups (the break) renders as a compact row. */
+interface ProgramItem {
+  title: string
+  duration: string
+  groups: { title: string; points: string[] }[]
+  note?: string
+}
 
 export interface Content {
   /** Browser tab title */
   pageTitle: string
-  nav: { about: string; program: string; speaker: string; audience: string; contacts: string }
+  nav: { about: string; speaker: string; program: string; audience: string; brand: string; contacts: string }
   register: string
   reserve: string
   claim: string
   hero: {
     eyebrow: string
     title: [string, string]
+    tag: string
     lead: string
     speaker: string
     date: string
     city: string
+    duration: string
     facts: [string, string, string]
   }
   benefits: { eyebrow: string; title: string; lead: string; items: { title: string; text: string }[] }
-  speaker: { label: string; name: [string, string]; points: string[]; motto: [string, string] }
+  speaker: {
+    label: string
+    name: [string, string]
+    roles: string[]
+    /** the three count-up cards: final value (a "+" is appended) and the label under it */
+    stats: { value: number; label: string }[]
+    points: string[]
+    motto: [string, string]
+  }
   program: {
     title: string
-    lead: string
-    items: { title: string; duration: string; points: string[] }[]
+    duration: string
+    speaker: string
+    outro: string
+    items: ProgramItem[]
   }
   audience: { title: [string, string]; items: { title: string; text: string }[] }
   brands: {
@@ -36,33 +57,49 @@ export interface Content {
   }
   cta: { title: string; lead: string; note: string }
   footer: { place: string; tag: string; impressum: string; privacy: string }
+  /** screen-reader-only labels (aria-label / skip link) */
+  a11y: { skip: string; mainNav: string; mobileNav: string; menu: string; language: string; newTab: string }
   form: {
     title: string
-    name: string
+    hint: string
+    firstName: string
+    lastName: string
     phone: string
-    email: string
-    clinic: string
-    note: string
-    close: string
+    phonePlaceholder: string
+    phoneHint: string
+    profession: string
+    experience: string
+    optional: string
+    select: string
+    experienceOptions: [string, string, string, string, string]
+    languages: string
+    languageOptions: { ka: string; ru: string; en: string }
+    sending: string
+    /** shown after a successful POST to FORM_ENDPOINT */
     sent: string
-    required: string
+    /** shown when no endpoint is set and the form opened a prefilled email */
+    sentMail: string
+    failed: string
+    errors: { required: string; letters: string; phone: string; languages: string }
   }
 }
 
 export const content: Record<Lang, Content> = {
   ru: {
     pageTitle: 'Фракционная мезотерапия · Professional derma series',
-    nav: { about: 'О семинаре', program: 'Программа', speaker: 'Спикер', audience: 'Для кого', contacts: 'Контакты' },
+    nav: { about: 'О семинаре', speaker: 'Спикер', program: 'Программа', audience: 'Для кого', brand: 'Бренд', contacts: 'Контакты' },
     register: 'Зарегистрироваться',
     reserve: 'Забронировать место',
     claim: 'Забрать своё место',
     hero: {
       eyebrow: 'Научный семинар',
       title: ['Фракционная', 'мезотерапия'],
+      tag: 'Микронидлинг',
       lead: 'Научные основы и современные комбинированные протоколы',
-      speaker: 'Dr. Ketevan Paksashvili',
+      speaker: 'Д-р Кетеван Паксашвили',
       date: '26 ноября 2026',
       city: 'Тбилиси, Грузия',
+      duration: '4 часа',
       facts: ['Доказательная медицина', 'Практические протоколы', 'Ограниченное количество мест'],
     },
     benefits: {
@@ -78,17 +115,78 @@ export const content: Record<Lang, Content> = {
     },
     speaker: {
       label: 'О спикере',
-      name: ['Dr. Ketevan', 'Paksashvili'],
-      points: ['Врач-дерматовенеролог', '13+ лет опыта', 'Международный эксперт reNeo', '500+ семинаров', '3000+ обученных врачей'],
+      name: ['Д-р Кетеван', 'Паксашвили'],
+      roles: ['Врач-дерматовенеролог', 'Косметолог', 'Трихолог', 'Международный эксперт'],
+      stats: [
+        { value: 13, label: 'лет опыта' },
+        { value: 500, label: 'авторских семинаров' },
+        { value: 3000, label: 'обученных специалистов' },
+      ],
+      points: [
+        '13+ лет опыта в эстетической дерматологии и профессиональной косметологии.',
+        'Основатель Aesthetic medicine Clinic — клиники эстетической медицины (Украина).',
+        'Основатель и руководитель KOSMETIK PROFI (Германия) — сети косметологических практик и школы профессиональной косметологии и трихологии.',
+        'Международный эксперт reNeo Cosmetics, ведущий европейский тренер и соавтор профессиональных протоколов.',
+        '500+ авторских семинаров и мастер-классов в более чем 10 странах Европы.',
+        '3 000+ обученных врачей, косметологов и специалистов эстетической медицины.',
+        'Международный спикер и автор образовательных программ в области эстетической косметологии, дерматологии и трихологии.',
+      ],
       motto: ['Экспертность.', 'Знания. Результаты.'],
     },
     program: {
       title: 'Программа семинара',
-      lead: 'Теория. Практика. Профессиональное сообщество.',
+      duration: 'Продолжительность: 4 часа',
+      speaker: 'Спикер: Д-р Кетеван Паксашвили',
+      outro: 'От понимания клеточных механизмов до эффективных комбинированных протоколов в практике косметолога.',
       items: [
-        { title: 'Теория', duration: '(2 часа)', points: ['Механизмы действия', 'Протоколы применения', 'Клинические исследования'] },
-        { title: 'Практика', duration: '(1.5 часа)', points: ['Живая демонстрация', 'Разбор клинических случаев', 'Вопросы и ответы'] },
-        { title: 'Перерыв', duration: '(30 мин)', points: ['Кофе-брейк', 'Нетворкинг'] },
+        {
+          title: 'Теоретическая часть',
+          duration: '2 часа',
+          groups: [
+            {
+              title: 'Механизмы действия микронидлинга',
+              points: [
+                'Гистологические и физиологические реакции кожи.',
+                'Клеточные механизмы регенерации, неоколлагенез и ремоделирование тканей.',
+                'Показания, противопоказания и профилактика осложнений.',
+              ],
+            },
+            {
+              title: 'Современные комбинированные протоколы',
+              points: [
+                'Микронидлинг + химические пилинги.',
+                'Микронидлинг + экзосомальная терапия.',
+                'Презентация профессиональных препаратов reNeo Cosmetics.',
+                'Подбор протоколов для коррекции возрастных изменений, постакне, пигментации и других эстетических проблем.',
+              ],
+            },
+            {
+              title: 'Построение эффективного курса процедур',
+              points: [
+                'Как правильно сочетать методики и определять последовательность процедур.',
+                'Оптимальные интервалы, количество сеансов и оценка результатов.',
+                'Индивидуальные курсовые программы и домашний уход.',
+              ],
+            },
+          ],
+        },
+        { title: 'Перерыв', duration: '30 минут', groups: [], note: 'Кофе-брейк · Нетворкинг' },
+        {
+          title: 'Практическая часть',
+          duration: '1,5 часа',
+          groups: [
+            {
+              title: 'Демонстрация процедуры микронидлинга на модели',
+              points: [
+                'Диагностика кожи и выбор протокола.',
+                'Подготовка кожи, подбор препаратов и параметров воздействия.',
+                'Пошаговая демонстрация процедуры.',
+                'Постпроцедурный уход и рекомендации.',
+                'Ответы на вопросы участников.',
+              ],
+            },
+          ],
+        },
       ],
     },
     audience: {
@@ -103,9 +201,9 @@ export const content: Record<Lang, Content> = {
       title: 'О бренде',
       tagline: 'Экспертиза · Наука · Красота · Развитие',
       organizer: 'Организатор',
-      organizerText: 'Organizer of professional seminars for cosmetologists',
+      organizerText: 'Организатор профессиональных семинаров для косметологов',
       partner: 'Партнер',
-      partnerText: 'European brand of professional cosmetology, combining advanced scientific developments and high quality standards',
+      partnerText: 'Европейский бренд профессиональной косметологии, сочетающий передовые научные разработки и высокие стандарты качества',
       values: ['Профессиональное обучение', 'Научный подход', 'Высокие стандарты', 'Развитие экспертов'],
     },
     cta: {
@@ -113,32 +211,57 @@ export const content: Record<Lang, Content> = {
       lead: 'Забронируйте место на эксклюзивном семинаре уже сегодня',
       note: 'Количество мест ограничено',
     },
-    footer: { place: 'Москва, Россия', tag: 'Science for healthy skin', impressum: 'Impressum', privacy: 'Datenschutz' },
+    footer: { place: 'Москва, Россия', tag: 'Наука для здоровой кожи', impressum: 'Правовая информация', privacy: 'Конфиденциальность' },
+    a11y: {
+      skip: 'Перейти к содержанию',
+      mainNav: 'Основное меню',
+      mobileNav: 'Мобильное меню',
+      menu: 'Меню',
+      language: 'Язык',
+      newTab: 'открывается в новой вкладке',
+    },
     form: {
-      title: 'Забронируйте ваше место',
-      name: 'Ваше имя',
-      phone: 'Телефон',
-      email: 'Email',
-      clinic: 'Название клиники',
-      note: 'Количество мест ограничено',
-      close: 'Закрыть',
-      sent: 'Письмо с заявкой открыто в вашей почте. Отправьте его, чтобы завершить бронирование.',
-      required: 'Заполните это поле',
+      title: 'Предварительная регистрация',
+      hint: 'Имя и фамилию вводите английскими или русскими буквами. Поля, отмеченные *, обязательны.',
+      firstName: 'Имя',
+      lastName: 'Фамилия',
+      phone: 'Номер телефона',
+      phonePlaceholder: '5xx xx xx xx',
+      phoneHint: 'Или в международном формате, например: +995 5xx xx xx xx',
+      profession: 'Профессия',
+      experience: 'Опыт работы',
+      optional: '(необязательно)',
+      select: 'Выберите',
+      experienceOptions: ['До 1 года', '1–3 года', '3–5 лет', '5–10 лет', '10+ лет'],
+      languages: 'Какими языками вы владеете',
+      languageOptions: { ka: 'Грузинский', ru: 'Русский', en: 'Английский' },
+      sending: 'Отправка…',
+      sent: 'Спасибо! Ваша заявка принята. Мы свяжемся с вами в ближайшее время.',
+      sentMail: 'Письмо с заявкой открыто в вашей почте. Отправьте его, чтобы завершить регистрацию.',
+      failed: 'Не удалось отправить заявку. Попробуйте ещё раз.',
+      errors: {
+        required: 'Заполните это поле',
+        letters: 'Только английские или русские буквы',
+        phone: 'Проверьте номер: 5xx xx xx xx или +995 5xx xx xx xx',
+        languages: 'Выберите хотя бы один язык',
+      },
     },
   },
   en: {
     pageTitle: 'Fractional mesotherapy · Professional derma series',
-    nav: { about: 'About', program: 'Program', speaker: 'Speaker', audience: 'Who it is for', contacts: 'Contacts' },
+    nav: { about: 'About', speaker: 'Speaker', program: 'Program', audience: 'Who it is for', brand: 'Brand', contacts: 'Contacts' },
     register: 'Register',
     reserve: 'Reserve a seat',
     claim: 'Claim your seat',
     hero: {
       eyebrow: 'Scientific seminar',
       title: ['Fractional', 'mesotherapy'],
+      tag: 'Microneedling',
       lead: 'The science and current combined protocols',
       speaker: 'Dr. Ketevan Paksashvili',
       date: '26 November 2026',
       city: 'Tbilisi, Georgia',
+      duration: '4 hours',
       facts: ['Evidence-based medicine', 'Practical protocols', 'Limited number of seats'],
     },
     benefits: {
@@ -155,16 +278,77 @@ export const content: Record<Lang, Content> = {
     speaker: {
       label: 'About the speaker',
       name: ['Dr. Ketevan', 'Paksashvili'],
-      points: ['Dermatovenerologist', '13+ years of experience', 'International reNeo expert', '500+ seminars', '3000+ physicians trained'],
+      roles: ['Dermatovenerologist', 'Cosmetologist', 'Trichologist', 'International expert'],
+      stats: [
+        { value: 13, label: 'years of experience' },
+        { value: 500, label: 'original seminars' },
+        { value: 3000, label: 'specialists trained' },
+      ],
+      points: [
+        '13+ years of experience in aesthetic dermatology and professional cosmetology.',
+        'Founder of Aesthetic medicine Clinic, a clinic of aesthetic medicine (Ukraine).',
+        'Founder and head of KOSMETIK PROFI (Germany), a network of cosmetology practices and a school of professional cosmetology and trichology.',
+        'International expert for reNeo Cosmetics, leading European trainer and co-author of professional protocols.',
+        '500+ original seminars and master classes in more than 10 European countries.',
+        '3,000+ physicians, cosmetologists and aesthetic medicine specialists trained.',
+        'International speaker and author of educational programs in aesthetic cosmetology, dermatology and trichology.',
+      ],
       motto: ['Expertise.', 'Knowledge. Results.'],
     },
     program: {
       title: 'Seminar program',
-      lead: 'Theory. Practice. A professional community.',
+      duration: 'Duration: 4 hours',
+      speaker: 'Speaker: Dr. Ketevan Paksashvili',
+      outro: 'From understanding cellular mechanisms to effective combined protocols in a cosmetologist’s practice.',
       items: [
-        { title: 'Theory', duration: '(2 hours)', points: ['Mechanisms of action', 'Protocols for use', 'Clinical studies'] },
-        { title: 'Practice', duration: '(1.5 hours)', points: ['Live demonstration', 'Clinical case review', 'Questions and answers'] },
-        { title: 'Break', duration: '(30 min)', points: ['Coffee break', 'Networking'] },
+        {
+          title: 'Theory',
+          duration: '2 hours',
+          groups: [
+            {
+              title: 'How microneedling works',
+              points: [
+                'Histological and physiological skin responses.',
+                'Cellular mechanisms of regeneration, neocollagenesis and tissue remodeling.',
+                'Indications, contraindications and prevention of complications.',
+              ],
+            },
+            {
+              title: 'Current combined protocols',
+              points: [
+                'Microneedling + chemical peels.',
+                'Microneedling + exosome therapy.',
+                'Presentation of reNeo Cosmetics professional products.',
+                'Choosing protocols for age-related changes, post-acne, pigmentation and other aesthetic concerns.',
+              ],
+            },
+            {
+              title: 'Building an effective treatment course',
+              points: [
+                'How to combine techniques and set the order of procedures.',
+                'Optimal intervals, number of sessions and assessing results.',
+                'Individual treatment programs and home care.',
+              ],
+            },
+          ],
+        },
+        { title: 'Break', duration: '30 minutes', groups: [], note: 'Coffee break · Networking' },
+        {
+          title: 'Practice',
+          duration: '1.5 hours',
+          groups: [
+            {
+              title: 'Live microneedling demonstration on a model',
+              points: [
+                'Skin diagnostics and choosing the protocol.',
+                'Skin preparation, choice of products and treatment parameters.',
+                'Step-by-step demonstration of the procedure.',
+                'Post-procedure care and recommendations.',
+                'Answers to participants’ questions.',
+              ],
+            },
+          ],
+        },
       ],
     },
     audience: {
@@ -189,32 +373,57 @@ export const content: Record<Lang, Content> = {
       lead: 'Reserve your seat at this exclusive seminar today',
       note: 'Seats are limited',
     },
-    footer: { place: 'Moscow, Russia', tag: 'Science for healthy skin', impressum: 'Impressum', privacy: 'Privacy' },
+    footer: { place: 'Moscow, Russia', tag: 'Science for healthy skin', impressum: 'Legal notice', privacy: 'Privacy policy' },
+    a11y: {
+      skip: 'Skip to content',
+      mainNav: 'Main navigation',
+      mobileNav: 'Mobile navigation',
+      menu: 'Menu',
+      language: 'Language',
+      newTab: 'opens in a new tab',
+    },
     form: {
-      title: 'Reserve your seat',
-      name: 'Your name',
-      phone: 'Phone',
-      email: 'Email',
-      clinic: 'Clinic name',
-      note: 'Seats are limited',
-      close: 'Close',
-      sent: 'An email with your request is open in your mail app. Send it to finish the booking.',
-      required: 'Fill in this field',
+      title: 'Pre-registration',
+      hint: 'Please enter your first and last name in English or Russian letters. Fields marked * are required.',
+      firstName: 'First name',
+      lastName: 'Last name',
+      phone: 'Phone number',
+      phonePlaceholder: '5xx xx xx xx',
+      phoneHint: 'Or in international format, e.g. +995 5xx xx xx xx',
+      profession: 'Profession',
+      experience: 'Work experience',
+      optional: '(optional)',
+      select: 'Select',
+      experienceOptions: ['Less than 1 year', '1–3 years', '3–5 years', '5–10 years', '10+ years'],
+      languages: 'Which languages do you speak',
+      languageOptions: { ka: 'Georgian', ru: 'Russian', en: 'English' },
+      sending: 'Sending…',
+      sent: 'Thank you! Your registration has been received. We will contact you soon.',
+      sentMail: 'An email with your registration is open in your mail app. Send it to finish registering.',
+      failed: 'Could not send your registration. Please try again.',
+      errors: {
+        required: 'Fill in this field',
+        letters: 'Use English or Russian letters only',
+        phone: 'Check the number: 5xx xx xx xx or +995 5xx xx xx xx',
+        languages: 'Choose at least one language',
+      },
     },
   },
   ka: {
     pageTitle: 'ფრაქციული მეზოთერაპია · Professional derma series',
-    nav: { about: 'სემინარის შესახებ', program: 'პროგრამა', speaker: 'სპიკერი', audience: 'ვისთვის', contacts: 'კონტაქტი' },
+    nav: { about: 'სემინარის შესახებ', speaker: 'სპიკერი', program: 'პროგრამა', audience: 'ვისთვის', brand: 'ბრენდი', contacts: 'კონტაქტი' },
     register: 'რეგისტრაცია',
     reserve: 'ადგილის დაჯავშნა',
     claim: 'დაიკავე ადგილი',
     hero: {
       eyebrow: 'სამეცნიერო სემინარი',
       title: ['ფრაქციული', 'მეზოთერაპია'],
+      tag: 'მიკრონიდლინგი',
       lead: 'სამეცნიერო საფუძვლები და თანამედროვე კომბინირებული პროტოკოლები',
-      speaker: 'Dr. Ketevan Paksashvili',
+      speaker: 'დოქტ. ქეთევან ფაქსაშვილი',
       date: '26 ნოემბერი, 2026',
       city: 'თბილისი, საქართველო',
+      duration: '4 საათი',
       facts: ['მტკიცებულებითი მედიცინა', 'პრაქტიკული პროტოკოლები', 'ადგილები შეზღუდულია'],
     },
     benefits: {
@@ -230,17 +439,78 @@ export const content: Record<Lang, Content> = {
     },
     speaker: {
       label: 'სპიკერის შესახებ',
-      name: ['Dr. Ketevan', 'Paksashvili'],
-      points: ['ექიმი დერმატოვენეროლოგი', '13+ წლის გამოცდილება', 'reNeo-ს საერთაშორისო ექსპერტი', '500+ სემინარი', '3000+ გადამზადებული ექიმი'],
+      name: ['დოქტ. ქეთევან', 'ფაქსაშვილი'],
+      roles: ['ექიმი დერმატოვენეროლოგი', 'კოსმეტოლოგი', 'ტრიქოლოგი', 'საერთაშორისო ექსპერტი'],
+      stats: [
+        { value: 13, label: 'წლის გამოცდილება' },
+        { value: 500, label: 'საავტორო სემინარი' },
+        { value: 3000, label: 'გადამზადებული სპეციალისტი' },
+      ],
+      points: [
+        '13+ წლის გამოცდილება ესთეტიკურ დერმატოლოგიასა და პროფესიულ კოსმეტოლოგიაში.',
+        'Aesthetic medicine Clinic-ის — ესთეტიკური მედიცინის კლინიკის (უკრაინა) — დამფუძნებელი.',
+        'KOSMETIK PROFI-ის (გერმანია) დამფუძნებელი და ხელმძღვანელი — კოსმეტოლოგიური პრაქტიკების ქსელი და პროფესიული კოსმეტოლოგიისა და ტრიქოლოგიის სკოლა.',
+        'reNeo Cosmetics-ის საერთაშორისო ექსპერტი, წამყვანი ევროპელი ტრენერი და პროფესიული პროტოკოლების თანაავტორი.',
+        '500+ საავტორო სემინარი და მასტერკლასი ევროპის 10-ზე მეტ ქვეყანაში.',
+        '3 000+ გადამზადებული ექიმი, კოსმეტოლოგი და ესთეტიკური მედიცინის სპეციალისტი.',
+        'საერთაშორისო სპიკერი და საგანმანათლებლო პროგრამების ავტორი ესთეტიკური კოსმეტოლოგიის, დერმატოლოგიისა და ტრიქოლოგიის სფეროში.',
+      ],
       motto: ['ექსპერტიზა.', 'ცოდნა. შედეგი.'],
     },
     program: {
       title: 'სემინარის პროგრამა',
-      lead: 'თეორია. პრაქტიკა. პროფესიული საზოგადოება.',
+      duration: 'ხანგრძლივობა: 4 საათი',
+      speaker: 'სპიკერი: დოქტ. ქეთევან ფაქსაშვილი',
+      outro: 'უჯრედული მექანიზმების გააზრებიდან ეფექტურ კომბინირებულ პროტოკოლებამდე კოსმეტოლოგის პრაქტიკაში.',
       items: [
-        { title: 'თეორია', duration: '(2 საათი)', points: ['მოქმედების მექანიზმები', 'გამოყენების პროტოკოლები', 'კლინიკური კვლევები'] },
-        { title: 'პრაქტიკა', duration: '(1.5 საათი)', points: ['ცოცხალი დემონსტრაცია', 'კლინიკური შემთხვევების განხილვა', 'კითხვები და პასუხები'] },
-        { title: 'შესვენება', duration: '(30 წთ)', points: ['ყავის შესვენება', 'ნეტვორქინგი'] },
+        {
+          title: 'თეორიული ნაწილი',
+          duration: '2 საათი',
+          groups: [
+            {
+              title: 'მიკრონიდლინგის მოქმედების მექანიზმები',
+              points: [
+                'კანის ჰისტოლოგიური და ფიზიოლოგიური რეაქციები.',
+                'რეგენერაციის უჯრედული მექანიზმები, ნეოკოლაგენეზი და ქსოვილების რემოდელირება.',
+                'ჩვენებები, უკუჩვენებები და გართულებების პრევენცია.',
+              ],
+            },
+            {
+              title: 'თანამედროვე კომბინირებული პროტოკოლები',
+              points: [
+                'მიკრონიდლინგი + ქიმიური პილინგები.',
+                'მიკრონიდლინგი + ეგზოსომური თერაპია.',
+                'reNeo Cosmetics-ის პროფესიული პრეპარატების პრეზენტაცია.',
+                'პროტოკოლების შერჩევა ასაკობრივი ცვლილებების, პოსტაკნეს, პიგმენტაციისა და სხვა ესთეტიკური პრობლემების კორექციისთვის.',
+              ],
+            },
+            {
+              title: 'პროცედურების ეფექტური კურსის აგება',
+              points: [
+                'როგორ შევუთავსოთ მეთოდიკები ერთმანეთს და განვსაზღვროთ პროცედურების თანმიმდევრობა.',
+                'ოპტიმალური ინტერვალები, სეანსების რაოდენობა და შედეგების შეფასება.',
+                'ინდივიდუალური კურსები და სახლის მოვლა.',
+              ],
+            },
+          ],
+        },
+        { title: 'შესვენება', duration: '30 წუთი', groups: [], note: 'ყავის შესვენება · ნეტვორქინგი' },
+        {
+          title: 'პრაქტიკული ნაწილი',
+          duration: '1,5 საათი',
+          groups: [
+            {
+              title: 'მიკრონიდლინგის პროცედურის დემონსტრაცია მოდელზე',
+              points: [
+                'კანის დიაგნოსტიკა და პროტოკოლის შერჩევა.',
+                'კანის მომზადება, პრეპარატებისა და ზემოქმედების პარამეტრების შერჩევა.',
+                'პროცედურის ეტაპობრივი დემონსტრაცია.',
+                'პოსტპროცედურული მოვლა და რეკომენდაციები.',
+                'პასუხები მონაწილეთა კითხვებზე.',
+              ],
+            },
+          ],
+        },
       ],
     },
     audience: {
@@ -255,27 +525,50 @@ export const content: Record<Lang, Content> = {
       title: 'ბრენდის შესახებ',
       tagline: 'ექსპერტიზა · მეცნიერება · სილამაზე · განვითარება',
       organizer: 'ორგანიზატორი',
-      organizerText: 'Organizer of professional seminars for cosmetologists',
+      organizerText: 'კოსმეტოლოგებისთვის პროფესიული სემინარების ორგანიზატორი',
       partner: 'პარტნიორი',
-      partnerText: 'European brand of professional cosmetology, combining advanced scientific developments and high quality standards',
+      partnerText: 'პროფესიული კოსმეტოლოგიის ევროპული ბრენდი, რომელიც აერთიანებს მოწინავე სამეცნიერო შემუშავებებსა და ხარისხის მაღალ სტანდარტებს',
       values: ['პროფესიული სწავლება', 'სამეცნიერო მიდგომა', 'მაღალი სტანდარტები', 'ექსპერტების განვითარება'],
     },
     cta: {
       title: 'მზად ხართ კვალიფიკაციის ასამაღლებლად?',
       lead: 'დაჯავშნეთ ადგილი ექსკლუზიურ სემინარზე დღესვე',
-      note: 'ადგილები შეზღუდულია',
+      note: 'ადგილების რაოდენობა შეზღუდულია',
     },
-    footer: { place: 'მოსკოვი, რუსეთი', tag: 'Science for healthy skin', impressum: 'Impressum', privacy: 'კონფიდენციალურობა' },
+    footer: { place: 'მოსკოვი, რუსეთი', tag: 'მეცნიერება ჯანსაღი კანისთვის', impressum: 'სამართლებრივი ინფორმაცია', privacy: 'კონფიდენციალურობის პოლიტიკა' },
+    a11y: {
+      skip: 'შინაარსზე გადასვლა',
+      mainNav: 'მთავარი მენიუ',
+      mobileNav: 'მობილური მენიუ',
+      menu: 'მენიუ',
+      language: 'ენა',
+      newTab: 'იხსნება ახალ ჩანართში',
+    },
     form: {
-      title: 'დაჯავშნეთ თქვენი ადგილი',
-      name: 'თქვენი სახელი',
-      phone: 'ტელეფონი',
-      email: 'ელფოსტა',
-      clinic: 'კლინიკის სახელწოდება',
-      note: 'ადგილები შეზღუდულია',
-      close: 'დახურვა',
-      sent: 'განაცხადის წერილი გაიხსნა თქვენს ელფოსტაში. გააგზავნეთ, რომ დაჯავშნა დასრულდეს.',
-      required: 'შეავსეთ ეს ველი',
+      title: 'წინასწარი რეგისტრაცია',
+      hint: 'სახელი და გვარი შეავსეთ ინგლისური ან რუსული ასოებით. ვარსკვლავით (*) აღნიშნული ველები სავალდებულოა.',
+      firstName: 'სახელი',
+      lastName: 'გვარი',
+      phone: 'ტელეფონის ნომერი',
+      phonePlaceholder: '5xx xx xx xx',
+      phoneHint: 'ან საერთაშორისო ფორმატით, მაგ.: +995 5xx xx xx xx',
+      profession: 'პროფესია',
+      experience: 'სამუშაო გამოცდილება',
+      optional: '(არასავალდებულო)',
+      select: 'აირჩიეთ',
+      experienceOptions: ['1 წლამდე', '1–3 წელი', '3–5 წელი', '5–10 წელი', '10+ წელი'],
+      languages: 'რა ენებს ფლობთ',
+      languageOptions: { ka: 'ქართული', ru: 'რუსული', en: 'ინგლისური' },
+      sending: 'იგზავნება…',
+      sent: 'გმადლობთ! თქვენი განაცხადი მიღებულია. მალე დაგიკავშირდებით.',
+      sentMail: 'განაცხადის წერილი გაიხსნა თქვენს ელფოსტაში. გააგზავნეთ, რომ რეგისტრაცია დასრულდეს.',
+      failed: 'განაცხადის გაგზავნა ვერ მოხერხდა. სცადეთ თავიდან.',
+      errors: {
+        required: 'შეავსეთ ეს ველი',
+        letters: 'გამოიყენეთ მხოლოდ ინგლისური ან რუსული ასოები',
+        phone: 'შეამოწმეთ ნომერი: 5xx xx xx xx ან +995 5xx xx xx xx',
+        languages: 'აირჩიეთ მინიმუმ ერთი ენა',
+      },
     },
   },
 }
