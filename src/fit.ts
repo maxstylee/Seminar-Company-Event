@@ -75,17 +75,31 @@ function fitSplit(active: boolean) {
     if (!active || !fill) continue
 
     const top = pageTop(sec)
-    let bottom = top + view // what the current page shows ends here
-    let start = top - hdr // where the current page rests
-    for (const b of blocks) {
-      const h = b.offsetHeight
-      const t = pageTop(b)
-      if (t + h <= bottom || h > view) continue
-      if (t < bottom) b.style.marginTop = `${(parseFloat(getComputedStyle(b).marginTop) || 0) + bottom - t}px` // straddles: push to the next page
-      b.setAttribute('data-break', '')
-      start = pageTop(b) - hdr - EDGE
-      bottom = start + hdr + view
+    let start = top - hdr // where the last page rests
+    // Lays the pages out from the first block on. With `headerOnly` the first page keeps just the heading and the figures,
+    // and the list starts the second page; otherwise the list starts right under the figures, as far as it fits.
+    const paginate = (headerOnly: boolean) => {
+      blocks.forEach((b) => {
+        b.style.removeProperty('margin-top')
+        b.removeAttribute('data-break')
+      })
+      let bottom = top + view // what the current page shows ends here
+      start = top - hdr
+      let pages = 1
+      for (const b of blocks) {
+        const h = b.offsetHeight
+        const t = pageTop(b)
+        const pushed = headerOnly && pages === 1 // the first block goes to the second page even though it would fit the first
+        if (!pushed && (t + h <= bottom || h > view)) continue
+        if (t < bottom) b.style.marginTop = `${(parseFloat(getComputedStyle(b).marginTop) || 0) + bottom - t}px` // straddles: push to the next page
+        b.setAttribute('data-break', '')
+        start = pageTop(b) - hdr - EDGE
+        bottom = start + hdr + view
+        pages++
+      }
+      return pages
     }
+    if (paginate(true) > 2) paginate(false) // the whole list does not fit one page: fill the first page as before
 
     // the last page rests at `start`; the section must end exactly one screen below it
     const gap = start - (top + sec.offsetHeight - window.innerHeight)

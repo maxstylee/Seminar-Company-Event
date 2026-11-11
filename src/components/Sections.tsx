@@ -109,16 +109,16 @@ export function Speaker() {
           loading="lazy"
           className="block aspect-square w-full object-cover object-top sm:aspect-[16/10] md:sticky md:top-[72px] md:aspect-[764/960] md:max-h-[calc(100svh-72px)] md:self-start lg:top-[88px] lg:max-h-[calc(100svh-88px)]"
         />
-        <div className="min-w-0 px-5 py-10 sm:px-8 sm:py-12 md:py-10 lg:py-[clamp(48px,6.1vw,88px)] lg:pr-[min(64px,4.4vw)] lg:pl-[min(68px,4.72vw)]">
+        <div className="min-w-0 px-5 py-10 sm:px-8 sm:py-12 md:py-10 lg:py-[clamp(48px,6.1vw,88px)] short:lg:py-8 lg:pr-[min(64px,4.4vw)] lg:pl-[min(68px,4.72vw)]">
           <p data-reveal className="grid h-[40px] w-fit place-items-center rounded-full border-[1.5px] border-wine-text px-5 text-[13px] font-medium tracking-[0.18em] text-wine-text uppercase sm:h-[44px] sm:px-[26px] sm:text-[15px] sm:tracking-[0.2em] lg:text-[17px]">
             {t.speaker.label}
           </p>
-          <h2 data-reveal className="mt-5 font-display text-[clamp(34px,9.5vw,60px)] leading-[1.06] font-medium tracking-[-0.01em] text-ink md:text-[clamp(38px,5.1vw,74px)] lg:mt-[22px]">
+          <h2 data-reveal className="mt-5 font-display text-[clamp(34px,9.5vw,60px)] leading-[1.06] font-medium tracking-[-0.01em] text-ink md:text-[clamp(38px,5.1vw,74px)] lg:mt-[22px] short:lg:mt-4 short:md:text-[clamp(34px,3.9vw,52px)]">
             <span className="block">{t.speaker.name[0]}</span>
             <span className="block">{t.speaker.name[1]}</span>
           </h2>
           {/* every role carries a divider on its left; the negative margin + overflow clip the divider of the first role on each line */}
-          <div data-reveal className="mt-4 overflow-hidden lg:mt-6">
+          <div data-reveal className="mt-4 overflow-hidden lg:mt-6 short:lg:mt-3">
             <ul className="-ml-[13px] flex flex-wrap gap-y-1.5 text-[12px] font-medium tracking-[0.12em] text-wine-text uppercase sm:text-[14px]">
               {t.speaker.roles.map((r) => (
                 <li
@@ -130,12 +130,12 @@ export function Speaker() {
               ))}
             </ul>
           </div>
-          <div data-reveal className="mt-7 lg:mt-10">
+          <div data-reveal className="mt-7 lg:mt-10 short:lg:mt-5">
             <CountUpStats items={t.speaker.stats} />
           </div>
-          <ul className="mt-7 flex flex-col gap-3.5 sm:gap-4 lg:mt-10">
+          <ul className="mt-7 flex flex-col gap-3.5 sm:gap-4 lg:mt-10 short:lg:mt-5 short:lg:gap-3">
             {t.speaker.points.map((p) => (
-              <li key={p} data-reveal data-block className="flex items-start gap-3.5 text-[16px] leading-[1.55] text-[#292929] sm:gap-4 sm:text-[17px] sm:leading-[1.6] xl:text-[18px]">
+              <li key={p} data-reveal data-block className="flex items-start gap-3.5 text-[16px] leading-[1.55] text-[#292929] sm:gap-4 sm:text-[17px] sm:leading-[1.6] xl:text-[18px] short:xl:text-[16.5px] short:sm:leading-[1.5]">
                 <span className="mt-[2px] grid size-[26px] shrink-0 place-items-center rounded-full bg-[#8a1820] text-white">
                   <Check size={15} strokeWidth={3} aria-hidden="true" />
                 </span>

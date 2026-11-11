@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* A computer window that is short (a laptop, a browser with toolbars): the speaker's text is tightened so that it is two pages, not three. */
+@custom-variant short (@media (min-width: 900px) and (max-height: 780px));
+
 /* Tokens sampled from the design PDF (example=landing.pdf). */
 @theme {
   --color-wine: #8a0e26;        /* primary buttons */
