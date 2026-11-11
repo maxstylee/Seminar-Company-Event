@@ -159,19 +159,20 @@ export function RegistrationSection() {
   const done = status === 'sent' || status === 'mail'
 
   return (
-    <section id="register" aria-labelledby="register-title" className="relative overflow-hidden bg-[#fdfdfd] px-4 pt-14 pb-16 sm:px-6 lg:px-8 lg:pt-[40px] lg:pb-[80px]">
-      <img src={asset('/images/cta-left.webp')} alt="" aria-hidden width={367} height={363} loading="lazy" className="fade-x-r pointer-events-none absolute top-0 left-0 hidden h-[363px] w-[367px] xl:block" />
-      <img src={asset('/images/cta-right.webp')} alt="" aria-hidden width={365} height={363} loading="lazy" className="fade-x-l pointer-events-none absolute top-0 right-0 hidden h-[363px] w-[365px] xl:block" />
+    <section id="register" aria-labelledby="register-title" className="cta-bg slide relative overflow-hidden px-4 pt-12 pb-14 sm:px-6 sm:pt-14 sm:pb-16 lg:px-8 lg:pt-[40px] lg:pb-[80px]">
+      {/* backdrop (.cta-bg, .cta-photo in index.css): the jar and the leaf flank the heading and dissolve into the page */}
+      <img src={asset('/images/cta-left.webp')} alt="" aria-hidden width={505} height={500} loading="lazy" className="cta-photo cta-photo-l pointer-events-none absolute top-0 left-0 hidden aspect-square h-[min(100%,310px)] w-auto xl:block" />
+      <img src={asset('/images/cta-right.webp')} alt="" aria-hidden width={503} height={500} loading="lazy" className="cta-photo cta-photo-r pointer-events-none absolute top-0 right-0 hidden aspect-square h-[min(100%,310px)] w-auto xl:block" />
 
-      <div className="relative mx-auto max-w-[1080px]">
+      <div className="relative mx-auto max-w-[calc(1080px/var(--k,1))]">
         <div data-reveal className="mx-auto flex max-w-[700px] flex-col items-center text-center">
-          <h2 id="register-title" className="max-w-[560px] font-display text-[38px] leading-[1.05] text-[#6e0d1d] sm:text-[50px] lg:text-[56px] lg:leading-[58px]">
+          <h2 id="register-title" className="max-w-[560px] font-display text-[clamp(30px,2.48vw+20.3px,56px)] leading-[1.06] text-[#6e0d1d]">
             {t.cta.title}
           </h2>
-          <p className="mt-4 font-display text-[18px] leading-7 text-[#1a191e] lg:mt-[20px] lg:text-[22px]">{t.cta.lead}</p>
+          <p className="mt-3 font-display text-[17px] leading-[1.5] text-[#1a191e] sm:mt-4 sm:text-[18px] lg:mt-[20px] lg:text-[22px]">{t.cta.lead}</p>
         </div>
 
-        <div data-reveal className="mt-8 rounded-[20px] border border-[#ece6e6] bg-white p-4 shadow-[0_28px_60px_-30px_rgba(70,20,30,0.3),0_2px_6px_rgba(30,20,20,0.04)] sm:p-7 lg:mt-10 lg:p-8">
+        <div data-reveal className="mt-8 rounded-[20px] border border-white/70 bg-white/85 p-4 backdrop-blur-md shadow-[0_28px_60px_-30px_rgba(70,20,30,0.3),0_2px_6px_rgba(30,20,20,0.04)] sm:p-7 lg:mt-10 lg:p-8">
           <h3 className="text-[20px] leading-tight font-bold text-ink sm:text-[22px]">{f.title}</h3>
           <p className="mt-1.5 text-[14px] leading-[1.45] text-muted">{f.hint}</p>
 
@@ -240,7 +241,8 @@ export function RegistrationSection() {
                 <Message id="reg-phone-msg" error={shown('phone')} hint={f.phoneHint} />
               </Cell>
 
-              <Cell>
+              {/* profession and experience: full width on phones (their "(optional)" labels do not fit half a phone), side by side from 480px */}
+              <Cell className="col-span-2 min-[480px]:col-span-1">
                 <Label htmlFor="reg-profession" text={f.profession} optional={f.optional} />
                 <input
                   id="reg-profession"
@@ -254,7 +256,7 @@ export function RegistrationSection() {
                 <Message />
               </Cell>
 
-              <Cell>
+              <Cell className="col-span-2 min-[480px]:col-span-1">
                 <Label htmlFor="reg-experience" text={f.experience} optional={f.optional} />
                 <div className="relative self-start">
                   <select
@@ -307,7 +309,7 @@ export function RegistrationSection() {
                 </p>
               )}
 
-              <button type="submit" disabled={status === 'sending'} className="btn-3d col-span-full mt-1 h-14 text-[18px] lg:h-[60px] lg:text-[20px]">
+              <button type="submit" disabled={status === 'sending'} className="btn-3d col-span-full mt-1 h-14 text-[clamp(15px,5.6vw,18px)] lg:h-[60px] lg:text-[20px]">
                 {status === 'sending' ? (
                   <>
                     <LoaderCircle size={22} className="animate-spin" aria-hidden="true" />

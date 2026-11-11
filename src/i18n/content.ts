@@ -33,7 +33,8 @@ export interface Content {
     label: string
     name: [string, string]
     roles: string[]
-    /** the three count-up cards: final value (a "+" is appended) and the label under it */
+    /** the three count-up cards: final value (a "+" is appended) and the label under it.
+     *  A label may carry soft hyphens (­): invisible, they mark where a long word may break in a narrow card. */
     stats: { value: number; label: string }[]
     points: string[]
     motto: [string, string]
@@ -58,7 +59,7 @@ export interface Content {
   cta: { title: string; lead: string; note: string }
   footer: { place: string; tag: string; impressum: string; privacy: string }
   /** screen-reader-only labels (aria-label / skip link) */
-  a11y: { skip: string; mainNav: string; mobileNav: string; menu: string; language: string; newTab: string }
+  a11y: { skip: string; mainNav: string; mobileNav: string; menu: string; language: string; newTab: string; toTop: string }
   form: {
     title: string
     hint: string
@@ -219,6 +220,7 @@ export const content: Record<Lang, Content> = {
       menu: 'Меню',
       language: 'Язык',
       newTab: 'открывается в новой вкладке',
+      toTop: 'Наверх',
     },
     form: {
       title: 'Предварительная регистрация',
@@ -381,6 +383,7 @@ export const content: Record<Lang, Content> = {
       menu: 'Menu',
       language: 'Language',
       newTab: 'opens in a new tab',
+      toTop: 'Back to top',
     },
     form: {
       title: 'Pre-registration',
@@ -442,9 +445,9 @@ export const content: Record<Lang, Content> = {
       name: ['დოქტ. ქეთევან', 'ფაქსაშვილი'],
       roles: ['ექიმი დერმატოვენეროლოგი', 'კოსმეტოლოგი', 'ტრიქოლოგი', 'საერთაშორისო ექსპერტი'],
       stats: [
-        { value: 13, label: 'წლის გამოცდილება' },
+        { value: 13, label: 'წლის გამოცდი\u00ADლება' },
         { value: 500, label: 'საავტორო სემინარი' },
-        { value: 3000, label: 'გადამზადებული სპეციალისტი' },
+        { value: 3000, label: 'გადამზადე\u00ADბული სპეცია\u00ADლისტი' },
       ],
       points: [
         '13+ წლის გამოცდილება ესთეტიკურ დერმატოლოგიასა და პროფესიულ კოსმეტოლოგიაში.',
@@ -543,6 +546,7 @@ export const content: Record<Lang, Content> = {
       menu: 'მენიუ',
       language: 'ენა',
       newTab: 'იხსნება ახალ ჩანართში',
+      toTop: 'დასაწყისში დაბრუნება',
     },
     form: {
       title: 'წინასწარი რეგისტრაცია',

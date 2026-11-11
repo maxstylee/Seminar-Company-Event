@@ -21,11 +21,44 @@ html {
   color-scheme: only light;
   background: #fff;
   scroll-behavior: smooth;
-  /* sticky header height (72px / 88px on lg), so anchored sections start right under it */
-  scroll-padding-top: 72px;
+  /* sticky header height with its 1px border (73px / 89px on lg), so sections start right under it */
+  --hdr: 73px;
+  /* one screen: what is left of the viewport under the header */
+  --screen: calc(100vh - var(--hdr));
+  scroll-padding-top: var(--hdr);
+  /* The page snaps to its sections (.slide below): a scroll never rests with a section border in the middle of the
+     screen. A section taller than the screen scrolls freely inside. In-page links glide there in src/glide.ts. */
+  scroll-snap-type: y mandatory;
+}
+@supports (height: 100svh) {
+  html { --screen: calc(100svh - var(--hdr)); }
 }
 @media (min-width: 1024px) {
-  html { scroll-padding-top: 88px; }
+  html { --hdr: 89px; }
+}
+/* phones and small tablets: snap only when the scroll stops near a section's start */
+@media (max-width: 820px) {
+  html { scroll-snap-type: y proximity; }
+}
+/* a section that an in-page link moved the keyboard focus to (src/glide.ts) shows no focus ring */
+:is(section, footer)[tabindex='-1']:focus { outline: none; }
+
+/* One slide per section: at least one screen tall, its content centered when it is shorter than the screen, and its
+   top is where the scroll snaps. In the components layer, so utilities on the children (w-[..]) still win.
+   --k (src/fit.ts) is the scale that makes a section taller than the window fit it, on a computer: the whole section
+   is zoomed by it, and its min-height is divided by it so it stays exactly one screen tall. Containers that are meant
+   to be capped at a design width in px (max-w-[calc(Npx/var(--k,1))]) are widened by 1/k, so the cap still means
+   N screen pixels. Sections marked data-tall are longer than a screen by design and are never scaled. */
+@layer components {
+  .slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    zoom: var(--k, 1);
+    min-height: calc(var(--screen) / var(--k, 1));
+    scroll-snap-align: start;
+  }
+  .slide > * { width: 100%; }
 }
 body {
   margin: 0;
@@ -33,16 +66,43 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* a word longer than its box (long Georgian / Russian words on very narrow phones) breaks instead of
+     sticking out and making the page scroll sideways */
+  overflow-wrap: break-word;
 }
 
 /* soft card shadow used across sections */
 .card-shadow { box-shadow: 0 6px 24px -8px rgba(30, 20, 20, 0.12), 0 1px 3px rgba(30, 20, 20, 0.04); }
 
+/* Hero photo. Below md it is a plain banner on top. From md it sits beside the text and its left edge fades
+   into the section background; past the 1440px design width its right edge fades too, so it never ends in a hard cut. */
+@media (min-width: 768px) {
+  .hero-photo { mask-image: linear-gradient(90deg, transparent 0, #000 90px); }
+}
+@media (min-width: 1441px) {
+  .hero-photo { mask-image: linear-gradient(90deg, transparent 0, #000 90px, #000 calc(100% - 160px), transparent 100%); }
+}
+
 /* fade the inner edge of decorative side photos into the section background */
-.fade-l { mask-image: linear-gradient(90deg, transparent 0, #000 90px); }
-.fade-r { mask-image: linear-gradient(270deg, transparent 0, #000 90px); }
 .fade-x-r { mask-image: linear-gradient(90deg, #000 60%, transparent 100%); }
 .fade-x-l { mask-image: linear-gradient(270deg, #000 60%, transparent 100%); }
+
+/* Registration backdrop (RegistrationSection.tsx): a light page with a soft wine glow behind the form card, and the two
+   photos (jar, leaf) beside the heading, as in the design. Each photo fades out on its inner side and at the bottom, so nothing ends
+   in a hard line; the card above them is frosted glass, so they show through it softly. */
+.cta-bg {
+  background:
+    radial-gradient(60% 55% at 50% 58%, rgb(138 14 38 / 0.07), transparent 70%),
+    radial-gradient(40% 40% at 50% 0%, rgb(255 255 255 / 0.9), transparent 100%),
+    linear-gradient(180deg, #fbfafa 0%, #f3eff0 100%);
+}
+.cta-photo {
+  mask-image: var(--cta-fade-x), linear-gradient(180deg, #000 75%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+.cta-photo-l { --cta-fade-x: linear-gradient(90deg, #000 45%, transparent 100%); }
+.cta-photo-r { --cta-fade-x: linear-gradient(270deg, #000 45%, transparent 100%); }
 
 /* hero enters once on load */
 /* transform only: text is painted (and counted for FCP/LCP) from the first frame */
@@ -181,9 +241,80 @@ body {
   to { opacity: 1; transform: none; }
 }
 [data-revealed='wait'] { opacity: 0; }
-[data-revealed='in'] { animation: reveal 1s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) backwards; }
+[data-revealed='in'] { animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) backwards; }
 @media print {
   [data-revealed] { opacity: 1 !important; animation: none !important; }
+}
+
+/* "Back to top" button (src/components/ToTop.tsx). The script moves the button itself (it rides down the right edge
+   on a computer, sits in the bottom corner on a phone); the disc inside fades and scales in, and the ring around it
+   fills with the scroll progress. */
+.totop {
+  position: fixed;
+  top: 0;
+  right: max(14px, calc(env(safe-area-inset-right, 0px) + 14px));
+  z-index: 30;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1), visibility 0s linear 0.35s;
+}
+.totop[data-show] { visibility: visible; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1), visibility 0s; }
+.totop-disc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ab2a40, #74091f);
+  color: #fff;
+  box-shadow: 0 10px 20px -10px rgb(138 14 38 / 0.6);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.35s cubic-bezier(0.2, 0.7, 0.1, 1), transform 0.35s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+.totop[data-show] .totop-disc { opacity: 1; transform: none; }
+.totop-disc > svg:last-child { width: 19px; height: 19px; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.1, 1); }
+@media (hover: hover) {
+  .totop[data-show]:hover .totop-disc { transform: translateY(-3px); }
+  .totop:hover .totop-disc > svg:last-child { transform: translateY(-2px); }
+}
+.totop:focus-visible { outline: none; }
+.totop:focus-visible .totop-disc { outline: 2px solid var(--color-wine); outline-offset: 6px; }
+.totop-ring {
+  position: absolute;
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+.totop-ring circle { fill: none; stroke-width: 2.4; }
+.totop-ring circle:first-child { stroke: #e9cdd3; }
+.totop-ring circle:last-child {
+  stroke: var(--color-wine);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.3s linear;
+}
+@media (max-width: 820px) {
+  .totop {
+    top: auto;
+    right: max(10px, calc(env(safe-area-inset-right, 0px) + 10px));
+    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
+    width: 38px;
+    height: 38px;
+  }
+  .totop-disc > svg:last-child { width: 17px; height: 17px; }
+}
+@media print {
+  .totop { display: none; }
 }
 
 /* Footer social icons. Only the logo moves; the link (tap target) stays put, so the hover never jitters at its edge.

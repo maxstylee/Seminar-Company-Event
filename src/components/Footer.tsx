@@ -18,7 +18,7 @@ const socials = [
 export function Footer() {
   const { t } = useLang()
   return (
-    <footer id="contacts" data-lang-fade className="bg-night px-5 py-10 font-display text-[#dcdcdc] lg:h-[213px] lg:px-0 lg:py-0">
+    <footer id="contacts" data-lang-fade className="snap-end bg-night px-5 py-10 font-display text-[#dcdcdc] lg:min-h-[213px] lg:px-0 lg:pt-0 lg:pb-6">
       <div className="mx-auto grid max-w-[1440px] gap-10 md:grid-cols-3 md:gap-6 lg:grid-cols-[34.51%_32.78%_minmax(0,1fr)] lg:gap-0">
         <div data-reveal className="flex flex-col items-center md:items-start lg:pt-[36px] lg:pl-[min(134px,9.3vw)]">
           <img src={asset('/images/logo-ds.png')} alt="Professional derma series" width={184} height={220} loading="lazy" className="h-[104px] w-auto" />

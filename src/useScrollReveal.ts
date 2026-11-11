@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
-const STAGGER = 90 // ms between blocks that enter the viewport together
-const MAX_STAGGER_STEPS = 5
+const STAGGER = 50 // ms between blocks that enter the viewport together
+const MAX_STAGGER_STEPS = 4
 
 /**
  * Soft scroll reveal for every `[data-reveal]` element: it fades in and rises a little the first time it enters the viewport.

@@ -52,19 +52,20 @@ export function CountUpStats({ items }: { items: { value: number; label: string 
   }, [])
 
   return (
-    <ul ref={ref} className="grid grid-cols-3 gap-2.5 sm:gap-4">
+    <ul ref={ref} className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-3 xl:gap-4">
       {items.map(({ value, label }) => {
         const final = `${formatNumber(value)}+`
         return (
-          <li key={value} className="card-shadow flex min-w-0 flex-col items-center rounded-[14px] border border-[#f0e9ea] bg-white px-2 py-4 text-center sm:px-4 sm:py-5">
-            <span className="font-display text-[28px] leading-none font-semibold text-wine-text tabular-nums sm:text-[40px] xl:text-[46px]">
+          <li key={value} className="card-shadow flex min-w-0 flex-col items-center rounded-[14px] border border-[#f0e9ea] bg-white px-1 py-3.5 text-center sm:px-3 sm:py-5 md:px-2 xl:px-3">
+            {/* the number scales with the card: three cards share a phone's width, and from md the text column beside the portrait */}
+            <span className="font-display text-[clamp(18px,7.2vw,28px)] leading-none font-semibold text-wine-text tabular-nums sm:text-[40px] md:text-[clamp(26px,3vw,46px)]">
               {/* visible digits: written by the effect above, never re-rendered by React; screen readers get the final value */}
               <span data-count={value} aria-hidden="true" translate="no" className="notranslate inline-block text-center" style={{ minWidth: `${final.length}ch` }}>
                 0+
               </span>
               <span className="sr-only">{final}</span>
             </span>
-            <span className="mt-2 text-[12px] leading-[1.3] text-muted sm:text-[14px]">{label}</span>
+            <span className="mt-2 max-w-full text-[12px] leading-[1.3] text-muted sm:text-[14px] md:text-[13px] xl:text-[14px]">{label}</span>
           </li>
         )
       })}
