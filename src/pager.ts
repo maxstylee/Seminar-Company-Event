@@ -5,7 +5,7 @@ import { glideTo } from './glide'
  * Page by page: one turn of the mouse wheel (or one key press) moves the page to the next screen, never in between.
  *
  * - A section that fits one screen is one stop. A section taller than the screen is paged one screen at a time
- *   (starting on a block marked `data-page` where there is one), so nothing is skipped and the last page ends at the
+ *   (on the starts that fit.ts laid out, where it did), so nothing is skipped and the last page ends at the
  *   bottom of the section.
  * - The footer is the last stop (the bottom of the page).
  * - The wheel is handled for a mouse and a trackpad. Touch keeps its own scrolling, with the CSS snap of index.css.
@@ -24,12 +24,12 @@ const TOLERANCE = 4
 /** Wheel distance (px) that turns a trackpad swipe into a step; one notch of a mouse wheel is already 100. */
 const SWIPE = 20
 /** Space (px) kept between the header and a block that a page starts on, and between a section's content and its cut edge. */
-const EDGE = 12
+export const EDGE = 12
 /** Pause (ms) with no wheel events that ends a gesture. */
 const PAUSE = 80
 
 /** Top of an element in px from the top of the page, without the transform of a running reveal animation (unlike getBoundingClientRect). */
-function pageTop(el: HTMLElement): number {
+export function pageTop(el: HTMLElement): number {
   let top = 0
   for (let node: HTMLElement | null = el; node; node = node.offsetParent as HTMLElement | null) top += node.offsetTop
   return top
@@ -61,21 +61,17 @@ function pageStops(): number[] {
       continue
     }
 
-    // A tall section is split into equal pages, none taller than a screen, the last one ending at the bottom of the
-    // section. A page starts on a block marked data-page (a card, a list) instead of cutting it in the middle, when
-    // such a block is close enough and moving the page there leaves no gap between it and its neighbours.
-    const count = Math.ceil((last - first - slack - TOLERANCE) / view) + 1
-    const pages = Array.from({ length: count }, (_, i) => first + ((last - first) * i) / (count - 1))
-    const marks = Array.from(el.querySelectorAll<HTMLElement>('[data-page]'), (m) => pageTop(m) - hdr - EDGE)
-    for (let i = 1; i < count; i++) {
-      // a stop outside first..last would be pulled back by the CSS snap, and the page would never get past it
-      const near = marks.filter((x) => x >= first && x <= last && Math.abs(x - pages[i]) <= view * 0.2)
-      const m = near.sort((a, b) => Math.abs(a - pages[i]) - Math.abs(b - pages[i]))[0]
-      if (m === undefined) continue
-      const reachesNext = i === count - 1 ? last - m <= slack + TOLERANCE : pages[i + 1] - m <= view
-      if (m - pages[i - 1] <= view && reachesNext) pages[i] = m
+    // A section whose pages fit.ts has already laid out (it marks the block each page starts on with data-break, so no
+    // block is cut at a page edge) rests on exactly those starts.
+    const breaks = Array.from(el.querySelectorAll<HTMLElement>('[data-break]'), (m) => Math.min(last, pageTop(m) - hdr - EDGE))
+    if (breaks.length) {
+      stops.push(first, ...breaks)
+      continue
     }
-    stops.push(...pages)
+
+    // Any other tall section is split into equal pages, none taller than a screen, the last one ending at the bottom.
+    const count = Math.ceil((last - first - slack - TOLERANCE) / view) + 1
+    stops.push(...Array.from({ length: count }, (_, i) => first + ((last - first) * i) / (count - 1)))
   }
 
   const sorted = stops.map((s) => Math.round(Math.min(max, Math.max(0, s)))).sort((a, b) => a - b)

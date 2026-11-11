@@ -37,7 +37,6 @@ export interface Content {
      *  A label may carry soft hyphens (­): invisible, they mark where a long word may break in a narrow card. */
     stats: { value: number; label: string }[]
     points: string[]
-    motto: [string, string]
   }
   program: {
     title: string
@@ -132,7 +131,6 @@ export const content: Record<Lang, Content> = {
         '3 000+ обученных врачей, косметологов и специалистов эстетической медицины.',
         'Международный спикер и автор образовательных программ в области эстетической косметологии, дерматологии и трихологии.',
       ],
-      motto: ['Экспертность.', 'Знания. Результаты.'],
     },
     program: {
       title: 'Программа семинара',
@@ -295,7 +293,6 @@ export const content: Record<Lang, Content> = {
         '3,000+ physicians, cosmetologists and aesthetic medicine specialists trained.',
         'International speaker and author of educational programs in aesthetic cosmetology, dermatology and trichology.',
       ],
-      motto: ['Expertise.', 'Knowledge. Results.'],
     },
     program: {
       title: 'Seminar program',
@@ -458,7 +455,6 @@ export const content: Record<Lang, Content> = {
         '3 000+ გადამზადებული ექიმი, კოსმეტოლოგი და ესთეტიკური მედიცინის სპეციალისტი.',
         'საერთაშორისო სპიკერი და საგანმანათლებლო პროგრამების ავტორი ესთეტიკური კოსმეტოლოგიის, დერმატოლოგიისა და ტრიქოლოგიის სფეროში.',
       ],
-      motto: ['ექსპერტიზა.', 'ცოდნა. შედეგი.'],
     },
     program: {
       title: 'სემინარის პროგრამა',

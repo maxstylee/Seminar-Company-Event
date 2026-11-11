@@ -40,7 +40,7 @@ export function Benefits() {
   const { t } = useLang()
   const icons = [CertificateIcon, FileText, Syringe, GroupIcon]
   return (
-    <section id="benefits" className="slide bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:pt-[38px] lg:pb-[56px]">
+    <section id="benefits" className="slide bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:pt-[32px] lg:pb-[40px]">
       <div className="mx-auto max-w-[calc(1287px/var(--k,1))] text-center">
         <Eyebrow>{t.benefits.eyebrow}</Eyebrow>
         <h2 data-reveal className="mt-3 font-serif text-[clamp(32px,4.19vw+17.66px,78px)] leading-[1.08] text-[#0a0a10] lg:mt-[20px]">
@@ -60,7 +60,7 @@ export function Benefits() {
                 data-reveal
                 className="card-shadow lift flex items-start gap-4 rounded-[18px] bg-white p-5 text-left sm:flex-col sm:items-center sm:gap-0 sm:px-6 sm:pt-[27px] sm:pb-7 sm:text-center lg:px-8"
               >
-                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-wine-soft text-wine min-[360px]:size-16 sm:size-[clamp(96px,9.1vw,131px)]">
+                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-wine-soft text-wine min-[360px]:size-16 sm:size-[clamp(88px,7.8vw,112px)]">
                   <Icon strokeWidth={1.15} className="size-[66%]" />
                 </span>
                 <div className="min-w-0">
@@ -91,7 +91,7 @@ function withFigure(text: string) {
 export function Speaker() {
   const { t } = useLang()
   return (
-    <section id="speaker" data-tall className="slide bg-white">
+    <section id="speaker" data-tall data-split className="slide bg-white">
       <div className="mx-auto grid max-w-[1440px] md:grid-cols-[minmax(0,40%)_minmax(0,1fr)] lg:grid-cols-[minmax(0,48%)_minmax(0,1fr)] xl:grid-cols-[minmax(0,50%)_minmax(0,1fr)]">
         {/* Below md: a banner cropped to the face and shoulders (the full portrait would be taller than the screen).
             From md: the portrait keeps its own shape (never taller than the screen) and stays in view, sticky under
@@ -133,9 +133,9 @@ export function Speaker() {
           <div data-reveal className="mt-7 lg:mt-10">
             <CountUpStats items={t.speaker.stats} />
           </div>
-          <ul data-page className="mt-7 flex flex-col gap-3.5 sm:gap-4 lg:mt-10">
+          <ul className="mt-7 flex flex-col gap-3.5 sm:gap-4 lg:mt-10">
             {t.speaker.points.map((p) => (
-              <li key={p} data-reveal className="flex items-start gap-3.5 text-[16px] leading-[1.55] text-[#292929] sm:gap-4 sm:text-[17px] sm:leading-[1.6] xl:text-[18px]">
+              <li key={p} data-reveal data-block className="flex items-start gap-3.5 text-[16px] leading-[1.55] text-[#292929] sm:gap-4 sm:text-[17px] sm:leading-[1.6] xl:text-[18px]">
                 <span className="mt-[2px] grid size-[26px] shrink-0 place-items-center rounded-full bg-[#8a1820] text-white">
                   <Check size={15} strokeWidth={3} aria-hidden="true" />
                 </span>
@@ -143,99 +143,117 @@ export function Speaker() {
               </li>
             ))}
           </ul>
-          <div data-reveal className="mt-9 flex items-center gap-6 lg:mt-12 lg:gap-[min(48px,3.4vw)]">
-            <span aria-hidden className="h-[2px] w-16 shrink-0 bg-[#a3515f] sm:w-24 lg:w-[min(160px,11vw)]" />
-            <p className="min-w-0 text-[12px] leading-[25px] tracking-[0.25em] text-[#767676] uppercase sm:text-[13px] sm:tracking-[0.3em] lg:text-[clamp(13px,1.1vw,16px)]">
-              <span className="block">{t.speaker.motto[0]}</span>
-              <span className="block">{t.speaker.motto[1]}</span>
-            </p>
-          </div>
+          {/* sized by fit.ts so that the last page ends where the section does (see fitSplit) */}
+          <div data-fill aria-hidden />
         </div>
       </div>
     </section>
   )
 }
 
+type ProgramItem = ReturnType<typeof useLang>['t']['program']['items'][number]
+
+function ProgramCard({ item, index, photo }: { item: ProgramItem; index: number; photo: string }) {
+  return (
+    <li data-reveal className="card-shadow overflow-hidden rounded-[14px] border-l-[6px] border-wine-deep bg-white">
+      {/* the photo, title and duration share one row only from md, where the title has room next to them */}
+      <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:gap-7 md:p-5 lg:pr-8">
+        <img
+          src={photo}
+          alt=""
+          width={525}
+          height={236}
+          loading="lazy"
+          className="block aspect-[525/236] w-full shrink-0 rounded-[10px] object-cover md:w-[200px] lg:w-[240px]"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold tracking-[0.3em] text-wine">{String(index + 1).padStart(2, '0')}</p>
+          <h3 className="mt-1 font-serif text-[22px] leading-[1.2] font-bold tracking-[0.01em] text-[#302825] uppercase sm:text-[24px] xl:text-[30px]">{item.title}</h3>
+          {item.note && <p className="mt-1.5 text-[16px] text-[#6b6b6b] lg:text-[18px]">{item.note}</p>}
+        </div>
+        <span className="flex w-fit shrink-0 items-center gap-2 rounded-full bg-wine-soft px-4 py-2 text-[15px] font-semibold whitespace-nowrap text-wine-text lg:text-[17px]">
+          <Clock size={18} strokeWidth={2} aria-hidden="true" />
+          {item.duration}
+        </span>
+      </div>
+
+      {item.groups.length > 0 && (
+        <div className={`grid gap-7 border-t border-[#eeeaea] px-5 pt-6 pb-6 sm:gap-8 sm:px-7 sm:pb-7 lg:px-8 lg:pb-8 ${item.groups.length > 1 ? 'lg:grid-cols-3 lg:gap-10' : ''}`}>
+          {item.groups.map((g) => (
+            <div key={g.title} className="min-w-0">
+              <h4 className="font-serif text-[19px] leading-[1.3] font-bold text-[#302825] lg:text-[21px]">{g.title}</h4>
+              {/* a single group (practice) flows into two columns, read top to bottom so the steps stay in order */}
+              <ul className={`mt-3.5 ${item.groups.length === 1 ? 'md:columns-2 md:gap-x-10' : ''}`}>
+                {g.points.map((p) => (
+                  <li key={p} className="flex break-inside-avoid gap-3 pb-2.5 text-[16px] leading-[1.55] text-[#3b3b3a] lg:text-[17px]">
+                    <span aria-hidden className="mt-[0.6em] size-2 shrink-0 rounded-full bg-wine-deep" />
+                    <span className="min-w-0">{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </li>
+  )
+}
+
+/**
+ * The program is two screens on a computer, cut where the content breaks (not in the middle of a card): the first is the
+ * heading and the theory card, the second is the break, the practice card and the call to action. Each is its own
+ * `.slide`, so fit.ts scales it to one screen. On a phone the two sections simply follow each other as one page.
+ */
 export function Program() {
   const { t } = useLang()
   // same order as the program: theory, break, practice
   const photos = ['/images/program-theory.webp', '/images/program-break.webp', '/images/program-practice.webp'].map(asset)
+  const [first, ...rest] = t.program.items
   return (
-    <section id="program" data-tall className="slide bg-[#fcfcfc] px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:pt-[33px] lg:pb-[88px]">
-      <div className="mx-auto max-w-[1332px]">
-        <div className="text-center">
-          <TopRule width={88} />
-          <h2 data-reveal className="mt-4 font-serif text-[clamp(32px,3.24vw+19.4px,66px)] leading-[1.1] text-[#342a28]">{t.program.title}</h2>
-          <ul data-reveal className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-[15px] text-[#494949] sm:text-[18px] lg:mt-[22px] lg:text-[19px]">
-            <li className="flex items-center gap-2.5">
-              <Clock size={22} strokeWidth={1.6} className="shrink-0 text-wine-text" aria-hidden="true" />
-              {t.program.duration}
-            </li>
-            <li className="flex items-center gap-2.5">
-              <UserRound size={22} strokeWidth={1.6} className="shrink-0 text-wine-text" aria-hidden="true" />
-              {t.program.speaker}
-            </li>
-          </ul>
+    <>
+      <section id="program" className="slide bg-[#fcfcfc] px-4 pt-12 pb-5 sm:px-6 sm:pt-14 lg:px-8 lg:pt-[33px] lg:pb-6">
+        <div className="mx-auto max-w-[calc(1332px/var(--k,1))]">
+          <div className="text-center">
+            <TopRule width={88} />
+            <h2 data-reveal className="mt-4 font-serif text-[clamp(32px,3.24vw+19.4px,66px)] leading-[1.1] text-[#342a28]">{t.program.title}</h2>
+            <ul data-reveal className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-[15px] text-[#494949] sm:text-[18px] lg:mt-[22px] lg:text-[19px]">
+              <li className="flex items-center gap-2.5">
+                <Clock size={22} strokeWidth={1.6} className="shrink-0 text-wine-text" aria-hidden="true" />
+                {t.program.duration}
+              </li>
+              <li className="flex items-center gap-2.5">
+                <UserRound size={22} strokeWidth={1.6} className="shrink-0 text-wine-text" aria-hidden="true" />
+                {t.program.speaker}
+              </li>
+            </ul>
+          </div>
+          <ol className="mt-8 sm:mt-10 lg:mt-12">
+            <ProgramCard item={first} index={0} photo={photos[0]} />
+          </ol>
         </div>
+      </section>
 
-        <ol className="mt-8 flex flex-col gap-5 sm:mt-10 lg:mt-12 lg:gap-6">
-          {t.program.items.map((item, i) => (
-            <li key={item.title} data-reveal data-page={i > 0 ? '' : undefined} className="card-shadow overflow-hidden rounded-[14px] border-l-[6px] border-wine-deep bg-white">
-              {/* the photo, title and duration share one row only from md, where the title has room next to them */}
-              <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:gap-7 md:p-5 lg:pr-8">
-                <img
-                  src={photos[i]}
-                  alt=""
-                  width={525}
-                  height={236}
-                  loading="lazy"
-                  className="block aspect-[525/236] w-full shrink-0 rounded-[10px] object-cover md:w-[200px] lg:w-[240px]"
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-semibold tracking-[0.3em] text-wine">{String(i + 1).padStart(2, '0')}</p>
-                  <h3 className="mt-1 font-serif text-[22px] leading-[1.2] font-bold tracking-[0.01em] text-[#302825] uppercase sm:text-[24px] xl:text-[30px]">{item.title}</h3>
-                  {item.note && <p className="mt-1.5 text-[16px] text-[#6b6b6b] lg:text-[18px]">{item.note}</p>}
-                </div>
-                <span className="flex w-fit shrink-0 items-center gap-2 rounded-full bg-wine-soft px-4 py-2 text-[15px] font-semibold whitespace-nowrap text-wine-text lg:text-[17px]">
-                  <Clock size={18} strokeWidth={2} aria-hidden="true" />
-                  {item.duration}
-                </span>
-              </div>
+      <section className="slide bg-[#fcfcfc] px-4 pb-12 sm:px-6 sm:pb-14 lg:px-8 lg:pt-6 lg:pb-8">
+        <div className="mx-auto max-w-[calc(1332px/var(--k,1))]">
+          <ol className="flex flex-col gap-5 lg:gap-6">
+            {rest.map((item, i) => (
+              <ProgramCard key={item.title} item={item} index={i + 1} photo={photos[i + 1]} />
+            ))}
+          </ol>
 
-              {item.groups.length > 0 && (
-                <div className={`grid gap-7 border-t border-[#eeeaea] px-5 pt-6 pb-6 sm:gap-8 sm:px-7 sm:pb-7 lg:px-8 lg:pb-8 ${item.groups.length > 1 ? 'lg:grid-cols-3 lg:gap-10' : ''}`}>
-                  {item.groups.map((g) => (
-                    <div key={g.title} className="min-w-0">
-                      <h4 className="font-serif text-[19px] leading-[1.3] font-bold text-[#302825] lg:text-[21px]">{g.title}</h4>
-                      {/* a single group (practice) flows into two columns, read top to bottom so the steps stay in order */}
-                      <ul className={`mt-3.5 ${item.groups.length === 1 ? 'md:columns-2 md:gap-x-10' : ''}`}>
-                        {g.points.map((p) => (
-                          <li key={p} className="flex break-inside-avoid gap-3 pb-2.5 text-[16px] leading-[1.55] text-[#3b3b3a] lg:text-[17px]">
-                            <span aria-hidden className="mt-[0.6em] size-2 shrink-0 rounded-full bg-wine-deep" />
-                            <span className="min-w-0">{p}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </li>
-          ))}
-        </ol>
+          <p data-reveal className="mx-auto mt-10 max-w-[860px] text-center font-display text-[20px] leading-[1.35] text-wine-text italic sm:mt-12 sm:text-[26px] lg:mt-8 lg:text-[30px]">
+            {t.program.outro}
+          </p>
 
-        <p data-reveal className="mx-auto mt-10 max-w-[860px] text-center font-display text-[20px] leading-[1.35] text-wine-text italic sm:mt-12 sm:text-[26px] lg:mt-14 lg:text-[30px]">
-          {t.program.outro}
-        </p>
-
-        <div data-reveal className="mt-7 text-center sm:mt-8 lg:mt-10">
-          <a href="#register" className="btn-3d h-[58px] w-full max-w-[425px] rounded-[14px] text-[18px] sm:h-[64px] sm:text-[20px] lg:h-[72px] lg:text-[22px]">
-            {t.claim}
-            <ArrowRight size={24} strokeWidth={1.8} aria-hidden="true" />
-          </a>
+          <div data-reveal className="mt-7 text-center sm:mt-8 lg:mt-6">
+            <a href="#register" className="btn-3d h-[58px] w-full max-w-[425px] rounded-[14px] text-[18px] sm:h-[64px] sm:text-[20px] lg:h-[64px] lg:text-[22px]">
+              {t.claim}
+              <ArrowRight size={24} strokeWidth={1.8} aria-hidden="true" />
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 
