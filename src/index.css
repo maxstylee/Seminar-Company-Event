@@ -39,9 +39,10 @@ html {
 @media (min-width: 1024px) {
   html { --hdr: 89px; }
 }
-/* phones and small tablets: snap only when the scroll stops near a section's start */
+/* phones and small tablets: no snap at all. Sections there are taller than the screen (the speaker, the program), and a
+   snap that pulls the page to a section start while a finger is scrolling jumps over, or hides, the lines in between. */
 @media (max-width: 820px) {
-  html { scroll-snap-type: y proximity; }
+  html { scroll-snap-type: none; }
 }
 /* a section that an in-page link moved the keyboard focus to (src/glide.ts) shows no focus ring */
 :is(section, footer)[tabindex='-1']:focus { outline: none; }
