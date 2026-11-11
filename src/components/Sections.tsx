@@ -109,7 +109,7 @@ export function Speaker() {
           loading="lazy"
           className="block aspect-square w-full object-cover object-top sm:aspect-[16/10] md:sticky md:top-[72px] md:aspect-[764/960] md:max-h-[calc(100svh-72px)] md:self-start lg:top-[88px] lg:max-h-[calc(100svh-88px)]"
         />
-        <div className="min-w-0 px-5 py-10 sm:px-8 sm:py-12 md:py-10 lg:py-[clamp(48px,6.1vw,88px)] short:lg:py-8 lg:pr-[min(64px,4.4vw)] lg:pl-[min(68px,4.72vw)]">
+        <div className="min-w-0 px-5 py-10 sm:px-8 sm:py-12 md:py-10 lg:py-[clamp(48px,6.1vw,88px)] lg:pt-[max(clamp(48px,6.1vw,88px),calc((var(--screen)_-_420px)/2))] short:lg:py-8 short:lg:pt-[max(32px,calc((var(--screen)_-_380px)/2))] lg:pr-[min(64px,4.4vw)] lg:pl-[min(68px,4.72vw)]">
           <p data-reveal className="grid h-[40px] w-fit place-items-center rounded-full border-[1.5px] border-wine-text px-5 text-[13px] font-medium tracking-[0.18em] text-wine-text uppercase sm:h-[44px] sm:px-[26px] sm:text-[15px] sm:tracking-[0.2em] lg:text-[17px]">
             {t.speaker.label}
           </p>
